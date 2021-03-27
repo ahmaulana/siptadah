@@ -34,4 +34,10 @@ class RequestController extends Controller
         ];
         return view('user.request.show', compact(['request', 'files']));
     }
+
+    public function edit($id)
+    {
+        $request = ModelsRequest::findOrFail($id);        
+        return view('user.request.edit', compact('request'));
+    }
 }

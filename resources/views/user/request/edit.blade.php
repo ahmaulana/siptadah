@@ -10,14 +10,14 @@
 			C492,219.198,479.172,207.418,464.344,207.418z" />
             </svg>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight inline">
-                {{ __('Buat Permohonan') }}
+                {{ __('Edit Permohonan') }}
             </h2>
         </a>
     </x-slot>
 
     <div class="py-5">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <livewire:request-form />
+            <livewire:user-edit-request :request="$request" />
         </div>
     </div>
 </x-app-layout>

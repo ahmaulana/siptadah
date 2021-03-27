@@ -9,7 +9,7 @@ use Mediconesystems\LivewireDatatables\NumberColumn;
 use Mediconesystems\LivewireDatatables\Http\Livewire\LivewireDatatable;
 
 class Requests extends LivewireDatatable
-{
+{    
     public $model = ModelsRequest::class;
 
     public function columns()
@@ -36,7 +36,8 @@ class Requests extends LivewireDatatable
             Column::callback(['id'], function ($id) {
                 return view('table-actions', ['id' => $id]);
             })
-            ->label('Aksi'),
+            ->label('Aksi')->alignCenter(),
+            Column::delete()->label('Hapus')->alignCenter(),            
         ];
     }
 }

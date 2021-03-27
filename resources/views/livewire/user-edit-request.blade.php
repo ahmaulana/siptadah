@@ -6,8 +6,8 @@
                         fieldError.focus({preventScroll:false});
                     }
                 },
-            }" x-init="() => { $watch('errors', value => focusField(value[0])) }">    
-    <form wire:submit.prevent="submit">        
+            }" x-init="() => { $watch('errors', value => focusField(value[0])) }">
+    <form wire:submit.prevent="update">
         <div class="mt-10 sm:mt-0">
             <div class="md:grid md:grid-cols-3 md:gap-6">
                 <div class="md:col-span-1">
@@ -129,7 +129,7 @@
                     <div class="shadow overflow-hidden sm:rounded-md">
                         <div class="px-4 py-5 bg-white sm:p-6">
                             <div class="grid grid-cols-6 gap-6">
-                                <div class="col-span-6 sm:col-span-3">
+                                <div class="col-span-6">
                                     <fieldset>
                                         <div class="mt-4 space-y-4">
                                             <div class="flex items-start">
@@ -142,8 +142,17 @@
                                             </div>
 
                                             @if($suratPermohonan)
-                                            <div class="col-span-6 sm:col-span-4">
-                                                <input type="file" wire:model="berkas_surat_permohonan" id="berkas_surat_permohonan" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
+                                            <div class="flex items-start">
+                                                <div class="grid grid-cols-6 gap-6">
+                                                    <div class="col-span-6">
+                                                        <input type="file" wire:model="berkas_surat_permohonan" id="berkas_surat_permohonan" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
+                                                    </div>
+                                                </div>
+                                                @if($file_surat_permohonan)
+                                                <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
+                                                    <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
+                                                </div>
+                                                @endif
                                             </div>
                                             @error('berkas_surat_permohonan') <span class="error text-red-500">{{ $message }}</span> @enderror
                                             @endif
@@ -161,8 +170,17 @@
                                             </div>
 
                                             @if($laporanPolisi)
-                                            <div class="col-span-6 sm:col-span-4">
-                                                <input type="file" wire:model="berkas_laporan_polisi" id="berkas_laporan_polisi" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
+                                            <div class="flex items-start">
+                                                <div class="grid grid-cols-6 gap-6">
+                                                    <div class="col-span-6">
+                                                        <input type="file" wire:model="berkas_laporan_polisi" id="berkas_laporan_polisi" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
+                                                    </div>
+                                                </div>
+                                                @if($file_laporan_polisi)
+                                                <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
+                                                    <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
+                                                </div>
+                                                @endif
                                             </div>
                                             @error('berkas_laporan_polisi') <span class="error text-red-500">{{ $message }}</span> @enderror
                                             @endif
@@ -180,9 +198,18 @@
                                             </div>
 
                                             @if($sppp)
-                                            <div class="col-span-6 sm:col-span-4">
-                                                <input type="file" wire:model="berkas_sp_pp" id="berkas_sp_pp" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
-                                            </div>
+                                            <div class="flex items-start">
+                                                <div class="grid grid-cols-6 gap-6">
+                                                    <div class="col-span-6">
+                                                        <input type="file" wire:model="berkas_sp_pp" id="berkas_sp_pp" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
+                                                    </div>
+                                                </div>
+                                                @if($file_sp_pp)
+                                                <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
+                                                    <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
+                                                </div>
+                                                @endif
+                                            </div>                                            
                                             @error('berkas_sp_pp') <span class="error text-red-500">{{ $message }}</span> @enderror
                                             @endif
                                             <div>
@@ -199,9 +226,18 @@
                                             </div>
 
                                             @if($beritaAcara)
-                                            <div class="col-span-6 sm:col-span-4">
-                                                <input type="file" wire:model="berkas_berita_acara" id="berkas_berita_acara" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
-                                            </div>
+                                            <div class="flex items-start">
+                                                <div class="grid grid-cols-6 gap-6">
+                                                    <div class="col-span-6">
+                                                        <input type="file" wire:model="berkas_berita_acara" id="berkas_berita_acara" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
+                                                    </div>
+                                                </div>
+                                                @if($file_berita_acara)
+                                                <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
+                                                    <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
+                                                </div>
+                                                @endif
+                                            </div>                                            
                                             @error('berkas_berita_acara') <span class="error text-red-500">{{ $message }}</span> @enderror
                                             @endif
                                             <div>
@@ -218,8 +254,17 @@
                                             </div>
 
                                             @if($suratPenerimaan)
-                                            <div class="col-span-6 sm:col-span-4">
-                                                <input type="file" wire:model="berkas_surat_penerimaan" id="berkas_surat_penerimaan" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
+                                            <div class="flex items-start">
+                                                <div class="grid grid-cols-6 gap-6">
+                                                    <div class="col-span-6">
+                                                        <input type="file" wire:model="berkas_surat_penerimaan" id="berkas_surat_penerimaan" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
+                                                    </div>
+                                                </div>
+                                                @if($file_surat_penerimaan)
+                                                <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
+                                                    <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
+                                                </div>
+                                                @endif
                                             </div>
                                             @error('berkas_surat_penerimaan') <span class="error text-red-500">{{ $message }}</span> @enderror
                                             @endif
@@ -237,9 +282,18 @@
                                             </div>
 
                                             @if($spPenyidikan)
-                                            <div class="col-span-6 sm:col-span-4">
-                                                <input type="file" wire:model="berkas_sp_penyidikan" id="berkas_sp_penyidikan" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
-                                            </div>
+                                            <div class="flex items-start">
+                                                <div class="grid grid-cols-6 gap-6">
+                                                    <div class="col-span-6">
+                                                        <input type="file" wire:model="berkas_sp_penyidikan" id="berkas_sp_penyidikan" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
+                                                    </div>
+                                                </div>
+                                                @if($file_sp_penyidikan)
+                                                <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
+                                                    <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
+                                                </div>
+                                                @endif
+                                            </div>                                            
                                             @error('berkas_sp_penyidikan') <span class="error text-red-500">{{ $message }}</span> @enderror
                                             @endif
                                             <div>
@@ -256,9 +310,18 @@
                                             </div>
 
                                             @if($spdp)
-                                            <div class="col-span-6 sm:col-span-4">
-                                                <input type="file" wire:model="berkas_spdp" id="berkas_spdp" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
-                                            </div>
+                                            <div class="flex items-start">
+                                                <div class="grid grid-cols-6 gap-6">
+                                                    <div class="col-span-6">
+                                                        <input type="file" wire:model="berkas_spdp" id="berkas_spdp" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
+                                                    </div>
+                                                </div>
+                                                @if($file_spdp)
+                                                <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
+                                                    <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
+                                                </div>
+                                                @endif
+                                            </div>                                            
                                             @error('berkas_spdp') <span class="error text-red-500">{{ $message }}</span> @enderror
                                             @endif
                                             <div>
@@ -275,9 +338,18 @@
                                             </div>
 
                                             @if($resume)
-                                            <div class="col-span-6 sm:col-span-4">
-                                                <input type="file" wire:model="berkas_resume" id="berkas_resume" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
-                                            </div>
+                                            <div class="flex items-start">
+                                                <div class="grid grid-cols-6 gap-6">
+                                                    <div class="col-span-6">
+                                                        <input type="file" wire:model="berkas_resume" id="berkas_resume" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
+                                                    </div>
+                                                </div>
+                                                @if($file_resume)
+                                                <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
+                                                    <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
+                                                </div>
+                                                @endif
+                                            </div>                                            
                                             @error('berkas_resume') <span class="error text-red-500">{{ $message }}</span> @enderror
                                             @endif
                                             <div>
@@ -420,7 +492,7 @@
                         </div>
                         <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
                             <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                Simpan
+                                Update
                             </button>
                         </div>
                     </div>

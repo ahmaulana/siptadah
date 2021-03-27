@@ -19,5 +19,5 @@
             <!-- This example requires Tailwind CSS v2.0+ -->
             <livewire:requests />
         </div>
-    </div>
+    </div>    
 </x-app-layout>
