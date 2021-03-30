@@ -6,33 +6,28 @@
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
                     @if(auth()->user()->role_id == 1)
-                    <a href="{{ route('admin.dashboard.index') }}">
-                    @else
-                    <a href="{{ route('user.dashboard.index') }}">
-                    @endif
-                        <x-jet-application-mark class="block h-9 w-auto" />
-                    </a>
+                    <a href="#">
+                        @else
+                        <a href="#">
+                            @endif
+                            <x-jet-application-mark class="block h-9 w-auto" />
+                        </a>
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">                    
-                    @if(auth()->user()->role_id == 1)
-                    <x-jet-nav-link href="{{ route('admin.dashboard.index') }}" :active="request()->routeIs('admin.dashboard.index')">                                                                           
-                        {{ __('Dashboard') }}
-                    </x-jet-nav-link>                
-                    @endif
-
-                    @if(auth()->user()->role_id == 2)                       
-                    <x-jet-nav-link href="{{ route('user.dashboard.index') }}" :active="request()->routeIs('user.dashboard.index')">
-                        {{ __('Dashboard') }}
-                    </x-jet-nav-link>                                       
-                    @endif
-
-                    @can('manage-requests') 
-                    <x-jet-nav-link href="{{ route('user.request.index') }}" :active="request()->routeIs('user.request.index')">
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    @can('Input Permohonan')
+                    <x-jet-nav-link href="{{ route('permohonan.index') }}" :active="(request()->routeIs('permohonan.*')) ? true : false">
                         {{ __('Permohonan') }}
-                    </x-jet-nav-link>                                       
-                    @endif
+                    </x-jet-nav-link>
+                    @endcan
+
+                    @can('Kelola User')
+                    <x-jet-nav-link href="{{ route('kelola-user.index') }}" :active="(request()->routeIs('kelola-user.*') || request()->routeIs('kelola-role.*') || request()->routeIs('kelola-permission.*')) ? true : false">
+                        {{ __('Kelola User') }}
+                    </x-jet-nav-link>
+                    @endcan
+
                 </div>
             </div>
 
@@ -154,22 +149,10 @@
 
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">            
+        <div class="pt-2 pb-3 space-y-1">
             @if(auth()->user()->role_id == 1)
-            <x-jet-responsive-nav-link href="{{ route('admin.dashboard.index') }}" :active="request()->routeIs('admin.dashboard.index')">                                            
+            <x-jet-responsive-nav-link href="{{ route('admin.dashboard.index') }}" :active="request()->routeIs('admin.dashboard.index')">
                 {{ __('Dashboard') }}
-            </x-jet-responsive-nav-link>
-            @endif
-
-            @if(auth()->user()->role_id == 2)
-            <x-jet-responsive-nav-link href="{{ route('user.dashboard.index') }}" :active="request()->routeIs('user.dashboard.index')">                                            
-                {{ __('Dashboard') }}
-            </x-jet-responsive-nav-link>
-            @endif            
-
-            @can('manage-requests')
-            <x-jet-responsive-nav-link href="{{ route('user.request.index') }}" :active="request()->routeIs('user.request.index')">                                            
-                {{ __('Permohonan') }}
             </x-jet-responsive-nav-link>
             @endif            
         </div>

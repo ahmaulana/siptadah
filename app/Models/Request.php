@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Request extends Model
 {
-    protected $fillable = ['asal_instansi', 'email', 'no_hp', 'no_surat_permohonan', 'tgl_surat_permohonan', 'jenis_permohonan', 'penyitaan_penggeledahan', 'berkas_surat_permohonan', 'berkas_laporan_polisi', 'berkas_sp_pp', 'berkas_berita_acara', 'berkas_surat_penerimaan', 'berkas_sp_penyidikan', 'berkas_spsd', 'berkas_resume', 'pasal', 'barang_bukti', 'sumber', 'nama_tersangka', 'tempat_lahir', 'tgl_lahir', 'alamat'];    
+    protected $fillable = ['user_id', 'asal_instansi', 'email', 'no_hp', 'no_surat_permohonan', 'tgl_surat_permohonan', 'jenis_permohonan', 'penyitaan_penggeledahan', 'tgl_sita_geledah', 'berkas_surat_permohonan', 'berkas_laporan_polisi', 'berkas_sp_pp', 'berkas_berita_acara', 'berkas_surat_penerimaan', 'berkas_sp_penyidikan', 'berkas_spsd', 'berkas_resume', 'pasal', 'barang_bukti', 'sumber', 'nama_tersangka', 'tempat_lahir', 'tgl_lahir', 'alamat'];    
 }

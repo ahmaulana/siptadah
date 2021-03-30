@@ -15,6 +15,7 @@ class CreateRequestsTable extends Migration
     {
         Schema::create('requests', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id');
             $table->string('asal_instansi');
             $table->string('email');
             $table->string('no_hp');
@@ -22,6 +23,7 @@ class CreateRequestsTable extends Migration
             $table->dateTime('tgl_surat_permohonan');
             $table->string('jenis_permohonan');
             $table->string('penyitaan_penggeledahan');
+            $table->dateTime('tgl_sita_geledah')->nullable();
             $table->string('berkas_surat_permohonan')->nullable();
             $table->string('berkas_laporan_polisi')->nullable();
             $table->string('berkas_sp_pp')->nullable();

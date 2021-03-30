@@ -6,8 +6,8 @@
                         fieldError.focus({preventScroll:false});
                     }
                 },
-            }" x-init="() => { $watch('errors', value => focusField(value[0])) }">    
-    <form wire:submit.prevent="submit">        
+            }" x-init="() => { $watch('errors', value => focusField(value[0])) }">
+    <form wire:submit.prevent="submit">
         <div class="mt-10 sm:mt-0">
             <div class="md:grid md:grid-cols-3 md:gap-6">
                 <div class="md:col-span-1">
@@ -22,12 +22,7 @@
                     <div class="shadow overflow-hidden sm:rounded-md">
                         <div class="px-4 py-5 bg-white sm:p-6">
                             <div class="grid grid-cols-6 gap-6">
-                                <div class="col-span-6 sm:col-span-4">
-                                    <label for="asal_instansi" class="block text-sm font-medium text-gray-700">Asal Instansi</label>
-                                    <input type="text" wire:model="asal_instansi" id="asal_instansi" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                    @error('asal_instansi') <span class="error text-red-500">{{ $message }}</span> @enderror
-                                </div>
-
+                                <input type="text" wire:model="user_id" id="" hidden>
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="email" class="block text-sm font-medium text-gray-700">Email Aktif (Untuk Verifikasi Lanjutan)</label>
                                     <input type="text" wire:model="email" id="email" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
@@ -80,20 +75,20 @@
                                     @error('jenis_permohonan') <span class="error text-red-500">{{ $message }}</span> @enderror
                                 </div>
 
-                                <div class="col-span-6 sm:col-span-4">
+                                <div class="col-span-6 sm:col-span-4" x-data="{ open: false }">
                                     <fieldset>
                                         <div>
                                             <legend class="text-sm font-medium text-gray-900">Apakah Kegiatan PENYITAAN/PENGGELEDAHAN tersebut sudah dilaksakan?</legend>
                                         </div>
                                         <div class="mt-4 space-y-4">
                                             <div class="flex items-center">
-                                                <input id="sudah" wire:model="penyitaan_penggeledahan" type="radio" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300" value="sudah">
+                                                <input @click="open = true" id="sudah" wire:model="penyitaan_penggeledahan" type="radio" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300" value="sudah">
                                                 <label for="sudah" class="ml-3 block text-sm font-medium text-gray-700">
                                                     Sudah
                                                 </label>
                                             </div>
                                             <div class="flex items-center">
-                                                <input id="belum`" wire:model="penyitaan_penggeledahan" type="radio" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300" value="belum">
+                                                <input @click="open = false" id="belum`" wire:model="penyitaan_penggeledahan" type="radio" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300" value="belum">
                                                 <label for="belum" class="ml-3 block text-sm font-medium text-gray-700">
                                                     Belum
                                                 </label>
@@ -101,7 +96,13 @@
                                         </div>
                                     </fieldset>
                                     @error('penyitaan_penggeledahan') <span class="error text-red-500">{{ $message }}</span> @enderror
+                                    <div class="mt-4 col-span-6 sm:col-span-4" x-show="open">
+                                        <label for="tgl_sita_geledah" class="block text-sm font-medium text-gray-700">Tanggal Sita Geledah</label>
+                                        <input type="date" wire:model="tgl_sita_geledah" id="tgl_sita_geledah" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                        @error('tgl_sita_geledah') <span class="error text-red-500">{{ $message }}</span> @enderror
+                                    </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -325,10 +326,26 @@
                                     <label for="barang_bukti" class="block text-sm font-medium text-gray-700">
                                         Daftar atau List Barang Bukti apa saja yang (telah/akan) dilakukan penyitaan/penggeledahan
                                     </label>
-                                    <div class="mt-1">
-                                        <textarea id="barang_bukti" wire:model="barang_bukti" rows="3" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
+                                    <input type="text" wire:model="barang_bukti.0" id="barang_bukti.0" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    @error('barang_bukti.0') <span class="error text-red-500">{{ $message }}</span> @enderror
+                                </div>
+
+                                @foreach($inputs as $key => $value)
+                                <div class="col-span-6">
+                                    <div class="flex">
+                                        <input type="text" wire:model="barang_bukti.{{ $value }}" id="barang_bukti.{{ $value }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                        @error('barang_bukti.{{ $value }}') <span class="error text-red-500">{{ $message }}</span> @enderror
+
+                                        <button wire:click.prevent="remove({{ $key }})" class="bg-red-700 ml-1 text-white text-xs px-4 py-2 rounded-full shadow hover:bg-red-900 outline-none focus:outline-none mr-1 mb-1">Hapus</button>
+
                                     </div>
-                                    @error('barang_bukti') <span class="error text-red-500">{{ $message }}</span> @enderror
+                                </div>
+                                @endforeach
+
+                                <div class="col-span-6">
+                                    <div class="flex justify-center ...">
+                                        <button wire:click.prevent="add({{ $i }})" class="bg-indigo-700 text-white text-xs px-4 py-2 rounded-full shadow hover:bg-indigo-900 outline-none focus:outline-none mr-1 mb-1">Tambah</button>
+                                    </div>
                                 </div>
 
                                 <div class="col-span-6">

@@ -22,11 +22,6 @@
                     <div class="shadow overflow-hidden sm:rounded-md">
                         <div class="px-4 py-5 bg-white sm:p-6">
                             <div class="grid grid-cols-6 gap-6">
-                                <div class="col-span-6 sm:col-span-4">
-                                    <label for="asal_instansi" class="block text-sm font-medium text-gray-700">Asal Instansi</label>
-                                    <input type="text" wire:model="asal_instansi" id="asal_instansi" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                    @error('asal_instansi') <span class="error text-red-500">{{ $message }}</span> @enderror
-                                </div>
 
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="email" class="block text-sm font-medium text-gray-700">Email Aktif (Untuk Verifikasi Lanjutan)</label>
@@ -79,21 +74,21 @@
                                     </fieldset>
                                     @error('jenis_permohonan') <span class="error text-red-500">{{ $message }}</span> @enderror
                                 </div>
-
-                                <div class="col-span-6 sm:col-span-4">
+                                
+                                <div class="col-span-6 sm:col-span-4"">
                                     <fieldset>
                                         <div>
                                             <legend class="text-sm font-medium text-gray-900">Apakah Kegiatan PENYITAAN/PENGGELEDAHAN tersebut sudah dilaksakan?</legend>
                                         </div>
                                         <div class="mt-4 space-y-4">
                                             <div class="flex items-center">
-                                                <input id="sudah" wire:model="penyitaan_penggeledahan" type="radio" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300" value="sudah">
+                                                <input @click="open = true" id="sudah" wire:model="penyitaan_penggeledahan" type="radio" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300" value="sudah">
                                                 <label for="sudah" class="ml-3 block text-sm font-medium text-gray-700">
                                                     Sudah
                                                 </label>
                                             </div>
                                             <div class="flex items-center">
-                                                <input id="belum`" wire:model="penyitaan_penggeledahan" type="radio" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300" value="belum">
+                                                <input @click="open = false" id="belum`" wire:model="penyitaan_penggeledahan" type="radio" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300" value="belum">
                                                 <label for="belum" class="ml-3 block text-sm font-medium text-gray-700">
                                                     Belum
                                                 </label>
@@ -101,6 +96,11 @@
                                         </div>
                                     </fieldset>
                                     @error('penyitaan_penggeledahan') <span class="error text-red-500">{{ $message }}</span> @enderror
+                                    <div class="mt-4 col-span-6 sm:col-span-4">
+                                        <label for="tgl_sita_geledah" class="block text-sm font-medium text-gray-700">Tanggal Sita Geledah</label>
+                                        <input type="date" wire:model="tgl_sita_geledah" id="tgl_sita_geledah" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                        @error('tgl_sita_geledah') <span class="error text-red-500">{{ $message }}</span> @enderror
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -209,7 +209,7 @@
                                                     <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
                                                 </div>
                                                 @endif
-                                            </div>                                            
+                                            </div>
                                             @error('berkas_sp_pp') <span class="error text-red-500">{{ $message }}</span> @enderror
                                             @endif
                                             <div>
@@ -237,7 +237,7 @@
                                                     <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
                                                 </div>
                                                 @endif
-                                            </div>                                            
+                                            </div>
                                             @error('berkas_berita_acara') <span class="error text-red-500">{{ $message }}</span> @enderror
                                             @endif
                                             <div>
@@ -293,7 +293,7 @@
                                                     <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
                                                 </div>
                                                 @endif
-                                            </div>                                            
+                                            </div>
                                             @error('berkas_sp_penyidikan') <span class="error text-red-500">{{ $message }}</span> @enderror
                                             @endif
                                             <div>
@@ -321,7 +321,7 @@
                                                     <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
                                                 </div>
                                                 @endif
-                                            </div>                                            
+                                            </div>
                                             @error('berkas_spdp') <span class="error text-red-500">{{ $message }}</span> @enderror
                                             @endif
                                             <div>
@@ -349,7 +349,7 @@
                                                     <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
                                                 </div>
                                                 @endif
-                                            </div>                                            
+                                            </div>
                                             @error('berkas_resume') <span class="error text-red-500">{{ $message }}</span> @enderror
                                             @endif
                                             <div>

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Request;
+use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -16,7 +17,7 @@ class UserEditRequest extends Component
 
     public $file_surat_permohonan, $file_laporan_polisi, $file_sp_pp, $file_berita_acara, $file_surat_penerimaan, $file_sp_penyidikan, $file_spdp, $file_resume;
 
-    public $asal_instansi, $email, $no_hp, $no_surat_permohonan, $tgl_surat_permohonan, $jenis_permohonan, $penyitaan_penggeledahan, $berkas_surat_permohonan, $berkas_laporan_polisi, $berkas_sp_pp, $berkas_berita_acara, $berkas_surat_penerimaan, $berkas_sp_penyidikan, $berkas_spdp, $berkas_resume, $pasal, $barang_bukti, $sumber, $nama_tersangka, $tempat_lahir, $tgl_lahir, $alamat;
+    public $user_id, $asal_instansi, $email, $no_hp, $no_surat_permohonan, $tgl_surat_permohonan, $jenis_permohonan, $penyitaan_penggeledahan, $tgl_sita_geledah, $berkas_surat_permohonan, $berkas_laporan_polisi, $berkas_sp_pp, $berkas_berita_acara, $berkas_surat_penerimaan, $berkas_sp_penyidikan, $berkas_spdp, $berkas_resume, $pasal, $barang_bukti, $sumber, $nama_tersangka, $tempat_lahir, $tgl_lahir, $alamat;
 
     protected $rules = [
         'asal_instansi' => 'required',
@@ -26,6 +27,7 @@ class UserEditRequest extends Component
         'tgl_surat_permohonan' => 'required|date',
         'jenis_permohonan' => 'required',
         'penyitaan_penggeledahan' => 'required',
+        'tgl_sita_geledah' => 'nullable|required_if:penyitaan_penggeledahan,sudah|date',
         'berkas_surat_permohonan' => 'nullable|mimes:docx,pdf,doc|max:2048',
         'berkas_laporan_polisi' => 'nullable|mimes:docx,pdf,doc|max:2048',
         'berkas_sp_pp' => 'nullable|mimes:docx,pdf,doc|max:2048',
@@ -54,6 +56,7 @@ class UserEditRequest extends Component
         'tgl_surat_permohonan.required' => ':attribute tidak boleh kosong!',
         'jenis_permohonan.required' => ':attribute tidak boleh kosong!',
         'penyitaan_penggeledahan.required' => ':attribute tidak boleh kosong!',
+        'tgl_sita_geledah.required_if' => 'Tanggal tidak boleh kosong!',
         'berkas_surat_permohonan.required' => ':attribute tidak boleh kosong!',
         'berkas_surat_permohonan.mimes' => 'format file tidak valid! hanya mendukung format (.docx, .doc, .pdf)',
         'berkas_surat_permohonan.max' => 'file terlalu besar! maksimal 2MB',
@@ -89,6 +92,7 @@ class UserEditRequest extends Component
     
     public function mount()
     {
+        $this->user_id = $this->request->user_id;        
         $this->asal_instansi = $this->request->asal_instansi;        
         $this->email = $this->request->email;
         $this->no_hp = $this->request->no_hp;
@@ -96,11 +100,13 @@ class UserEditRequest extends Component
         $this->tgl_surat_permohonan = date('Y-m-d', strtotime($this->request->tgl_surat_permohonan));
         $this->jenis_permohonan = $this->request->jenis_permohonan;
         $this->penyitaan_penggeledahan = $this->request->penyitaan_penggeledahan;
+        $this->tgl_sita_geledah = $this->request->tgl_sita_geledah != null ? date('Y-m-d', strtotime($this->request->tgl_sita_geledah)) : null;
         $this->pasal = $this->request->pasal;
         $this->barang_bukti = $this->request->barang_bukti;
         $this->sumber = $this->request->sumber;
         $this->nama_tersangka = $this->request->nama_tersangka;
         $this->tempat_lahir = $this->request->tempat_lahir;
+        
         $this->tgl_lahir = date('Y-m-d', strtotime($this->request->tgl_lahir));
         $this->alamat = $this->request->alamat;
         
@@ -121,10 +127,11 @@ class UserEditRequest extends Component
         $this->spPenyidikan = (isset($this->request->berkas_sp_penyidikan)) ? true : false;
         $this->spdp = (isset($this->request->berkas_spdp)) ? true : false;
         $this->resume = (isset($this->request->berkas_resume)) ? true : false;        
+        
     }
     
     public function render()
-    {        
+    {                
         return view('livewire.user-edit-request');
     }
 
@@ -132,20 +139,20 @@ class UserEditRequest extends Component
     {
         $request = $this->validate();        
         $update = Request::findOrFail($this->request->id);
-        $update->asal_instansi = $request['asal_instansi'];
         $update->email = $request['email'];
         $update->no_hp = $request['no_hp'];
         $update->no_surat_permohonan = $request['no_surat_permohonan'];
-        $update->tgl_surat_permohonan = $request['tgl_surat_permohonan'];        
+        $update->tgl_surat_permohonan = $request['tgl_surat_permohonan'];
         $update->jenis_permohonan = $request['jenis_permohonan'];
         $update->penyitaan_penggeledahan = $request['penyitaan_penggeledahan'];
+        $update->tgl_sita_geledah = ($request['penyitaan_penggeledahan'] == 'sudah') ? $request['tgl_sita_geledah'] : null;
         $update->pasal = $request['pasal'];
         $update->barang_bukti = $request['barang_bukti'];
         $update->sumber = $request['sumber'];
         $update->nama_tersangka = $request['nama_tersangka'];
         $update->tempat_lahir = $request['tempat_lahir'];
         $update->tgl_lahir = $request['tgl_lahir'];
-        $update->alamat = $request['alamat'];        
+        $update->alamat = $request['alamat'];           
 
         //Simpan Berkas-Berkas
         if (isset($request['berkas_surat_permohonan'])) {
@@ -192,6 +199,6 @@ class UserEditRequest extends Component
         session()->flash('flash.banner', 'Permohonan berhasil diperbarui!');
         session()->flash('flash.bannerStyle', 'success');    
 
-        return redirect(route('user.request.index'));
+        return redirect(route('permohonan.index'));
     }
 }
