@@ -32,14 +32,13 @@ class CreateRequestsTable extends Migration
             $table->string('berkas_sp_penyidikan')->nullable();
             $table->string('berkas_spdp')->nullable();
             $table->string('berkas_resume')->nullable();
-            $table->string('pasal');
-            $table->text('barang_bukti');
+            $table->string('pasal');            
             $table->text('sumber');
             $table->string('nama_tersangka');
             $table->string('tempat_lahir');
             $table->dateTime('tgl_lahir');
             $table->text('alamat');
-            $table->enum('status',['diproses','disetujui','ditolak'])->default('diproses');
+            $table->enum('status',['menunggu','sedang diproses', 'disetujui', 'ditolak'])->default('menunggu');
             $table->timestamps();
         });
     }

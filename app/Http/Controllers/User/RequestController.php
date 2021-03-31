@@ -35,11 +35,12 @@ class RequestController extends Controller
     public function edit($id)
     {
         $request = ModelsRequest::findOrFail($id);
+        $evidence = ModelsRequest::findOrFail($id)->evidence_lists;
         if (auth()->user()->id !== 1) {
             if ($request->user_id !== auth()->user()->id || auth()->user()->cannot('Edit Permohonan')) {
                 abort(403);
             }
         }
-        return view('user.request.edit', compact('request'));
+        return view('user.request.edit', compact(['request', 'evidence']));
     }
 }

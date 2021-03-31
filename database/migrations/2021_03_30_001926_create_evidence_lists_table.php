@@ -13,9 +13,10 @@ class CreateEvidenceListsTable extends Migration
      */
     public function up()
     {
-        Schema::create('evidence_lists', function (Blueprint $table) {
+        Schema::create('evidence_lists', function (Blueprint $table) {            
             $table->id();
-            $table->timestamps();
+            $table->foreignId('request_id')->constrained('requests')->onDelete('cascade')->onUpdate('cascade');;
+            $table->string('barang_bukti');
         });
     }
 

@@ -103,7 +103,16 @@
                         Daftar atau List Barang Bukti
                     </dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        {{ $data->barang_bukti }}
+                        <ul class="border border-gray-200 rounded-md divide-y divide-gray-200">
+                            @foreach($barang_bukti as $bukti)
+                            <li class="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
+                                <div class="w-0 flex-1 flex items-center">
+                                    <!-- Heroicon name: solid/paper-clip -->
+                                    {{ $bukti->barang_bukti }}
+                                </div>                                
+                            </li>
+                            @endforeach
+                        </ul>
                         <div class="mt-1">
                             Sumber: <strong>{{ $data->sumber }}</strong>
                         </div>

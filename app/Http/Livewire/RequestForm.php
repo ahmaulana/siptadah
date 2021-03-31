@@ -2,8 +2,10 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\EvidenceList;
 use App\Models\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -108,8 +110,7 @@ class RequestForm extends Component
     public function submit()
     {        
         //Validasi Inputan User             
-        $request = $this->validate();
-        dd($request);
+        $request = $this->validate();                
         //Simpan Berkas-Berkas
         if (isset($request['berkas_surat_permohonan'])) {
             $request['berkas_surat_permohonan']->store('berkas');
@@ -150,14 +151,23 @@ class RequestForm extends Component
             $request['berkas_resume']->store('berkas');
             $request['berkas_resume'] = $request['berkas_resume']->hashName();
         }
-
+        
         $user_id = auth()->user()->id;
 
         $user = User::find($user_id);
         $request['user_id'] = $user_id;
-        $request['asal_instansi'] = $user->getRoleNames()->first();
+        $request['asal_instansi'] = $user->getRoleNames()->first();                
 
-        $store = Request::create($request);
+        DB::transaction(function() use ($request) {            
+            $store_request = Request::create($request);
+            
+            foreach($request['barang_bukti'] as $bukti)
+            {
+                $barang_bukti = new EvidenceList;
+                $barang_bukti->barang_bukti = $bukti;
+                $store_request->evidence_lists()->save($barang_bukti);
+            }
+        });
         session()->flash('flash.banner', 'Permohonan berhasil disimpan!');
         session()->flash('flash.bannerStyle', 'success');
 

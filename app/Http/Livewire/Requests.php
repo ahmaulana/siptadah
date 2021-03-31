@@ -45,7 +45,7 @@ class Requests extends LivewireDatatable
 
             Column::name('status')
                 ->label('Status')
-                ->filterable(['diproses', 'disetujui', 'ditolak']),
+                ->filterable(['menunggu', 'sedang diproses', 'disetujui', 'ditolak']),
 
             DateColumn::name('updated_at')
                 ->label('Diperbarui'),

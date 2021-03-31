@@ -11,6 +11,7 @@ class Show extends Component
     public function render()
     {        
         $data = Request::findOrFail($this->request);
+        $barang_bukti = Request::findOrFail($this->request)->evidence_lists;        
         $files = [
             ['name' => 'Surat Permohonan', 'link' => $data->berkas_surat_permohonan],
             ['name' => 'Laporan Polisi', 'link' => $data->berkas_laporan_polisi],
@@ -21,7 +22,7 @@ class Show extends Component
             ['name' => 'Surat Perintah Dimulainya Penyidikan (SPDP)', 'link' => $data->berkas_spdp],
             ['name' => 'Resume', 'link' => $data->berkas_resume]
         ];
-        return view('livewire.request.show', compact(['data', 'files']));
+        return view('livewire.request.show', compact(['data', 'files', 'barang_bukti']));
     }
 
     public function download($file, $name)

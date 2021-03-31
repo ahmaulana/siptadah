@@ -2,14 +2,21 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\EvidenceList;
 use App\Models\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class UserEditRequest extends Component
 {
-    public $request;
+    public $request, $evidence, $barang_bukti;
+
+    public $i = 0;
+    public $inputs = [];
+    public $deleted_evidence = [];
+    public $request_status;
 
     use WithFileUploads;
 
@@ -17,7 +24,7 @@ class UserEditRequest extends Component
 
     public $file_surat_permohonan, $file_laporan_polisi, $file_sp_pp, $file_berita_acara, $file_surat_penerimaan, $file_sp_penyidikan, $file_spdp, $file_resume;
 
-    public $user_id, $asal_instansi, $email, $no_hp, $no_surat_permohonan, $tgl_surat_permohonan, $jenis_permohonan, $penyitaan_penggeledahan, $tgl_sita_geledah, $berkas_surat_permohonan, $berkas_laporan_polisi, $berkas_sp_pp, $berkas_berita_acara, $berkas_surat_penerimaan, $berkas_sp_penyidikan, $berkas_spdp, $berkas_resume, $pasal, $barang_bukti, $sumber, $nama_tersangka, $tempat_lahir, $tgl_lahir, $alamat;
+    public $user_id, $asal_instansi, $email, $no_hp, $no_surat_permohonan, $tgl_surat_permohonan, $jenis_permohonan, $penyitaan_penggeledahan, $tgl_sita_geledah, $berkas_surat_permohonan, $berkas_laporan_polisi, $berkas_sp_pp, $berkas_berita_acara, $berkas_surat_penerimaan, $berkas_sp_penyidikan, $berkas_spdp, $berkas_resume, $pasal, $sumber, $nama_tersangka, $tempat_lahir, $tgl_lahir, $alamat;
 
     protected $rules = [
         'asal_instansi' => 'required',
@@ -37,7 +44,7 @@ class UserEditRequest extends Component
         'berkas_spdp' => 'nullable|mimes:docx,pdf,doc|max:2048',
         'berkas_resume' => 'nullable|mimes:docx,pdf,doc|max:2048',
         'pasal' => 'required',
-        'barang_bukti' => 'required',
+        'barang_bukti.*' => 'required',
         'sumber' => 'required',
         'nama_tersangka' => 'required',
         'tempat_lahir' => 'required',
@@ -89,11 +96,18 @@ class UserEditRequest extends Component
         'tgl_lahir.required' => ':attribute tidak boleh kosong!',
         'alamat.required' => ':attribute tidak boleh kosong!',
     ];
-    
+
     public function mount()
-    {
-        $this->user_id = $this->request->user_id;        
-        $this->asal_instansi = $this->request->asal_instansi;        
+    {        
+        if (auth()->user()->can('Verifikasi Permohonan')) {
+            $this->request_status = Request::findOrFail($this->request->id);
+            if ($this->request_status->status == 'menunggu') {
+                $this->request_status->status = 'sedang diproses';
+                $this->request_status->save();
+            }
+        }
+        $this->user_id = $this->request->user_id;
+        $this->asal_instansi = $this->request->asal_instansi;
         $this->email = $this->request->email;
         $this->no_hp = $this->request->no_hp;
         $this->no_surat_permohonan = $this->request->no_surat_permohonan;
@@ -102,103 +116,161 @@ class UserEditRequest extends Component
         $this->penyitaan_penggeledahan = $this->request->penyitaan_penggeledahan;
         $this->tgl_sita_geledah = $this->request->tgl_sita_geledah != null ? date('Y-m-d', strtotime($this->request->tgl_sita_geledah)) : null;
         $this->pasal = $this->request->pasal;
-        $this->barang_bukti = $this->request->barang_bukti;
         $this->sumber = $this->request->sumber;
         $this->nama_tersangka = $this->request->nama_tersangka;
         $this->tempat_lahir = $this->request->tempat_lahir;
-        
+
         $this->tgl_lahir = date('Y-m-d', strtotime($this->request->tgl_lahir));
         $this->alamat = $this->request->alamat;
-        
-        $this->file_surat_permohonan = $this->request->berkas_surat_permohonan;        
-        $this->file_laporan_polisi = $this->request->berkas_laporan_polisi;
-        $this->file_sp_pp = $this->request->berkas_sp_pp;
-        $this->file_berita_acara = $this->request->berkas_berita_acara;
-        $this->file_surat_penerimaan = $this->request->berkas_surat_penerimaan;
-        $this->file_sp_penyidikan = $this->request->berkas_sp_penyidikan;
-        $this->file_spdp = $this->request->berkas_spdp;
-        $this->file_resume = $this->request->berkas_resume;
 
-        $this->suratPermohonan = (isset($this->request->berkas_surat_permohonan)) ? true : false;        
-        $this->laporanPolisi = (isset($this->request->berkas_laporan_polisi)) ? true : false;        
+        $this->file_surat_permohonan = ['name' => 'Surat Permohonan', 'link' => $this->request->berkas_surat_permohonan];
+        $this->file_laporan_polisi = ['name' => 'Laporan Polisi', 'link' => $this->request->berkas_laporan_polisi];
+        $this->file_sp_pp = ['name' => 'Surat Perintah Penyitaan/Penggeledahan', 'link' => $this->request->berkas_sp_pp];
+        $this->file_berita_acara = ['name' => 'Berita Acara Penyitaan/Penggeledahan', 'link' => $this->request->berkas_berita_acara];
+        $this->file_surat_penerimaan = ['name' => 'Surat Tanda Penerimaan', 'link' => $this->request->berkas_surat_penerimaan];
+        $this->file_sp_penyidikan = ['name' => 'Surat Perintah Penyidikan', 'link' => $this->request->berkas_sp_penyidikan];
+        $this->file_spdp = ['name' => 'Surat Perintah Dimulainya Penyidikan (SPDP)', 'link' => $this->request->berkas_spdp];
+        $this->file_resume = ['name' => 'Resume', 'link' => $this->request->berkas_resume];
+
+        $this->suratPermohonan = (isset($this->request->berkas_surat_permohonan)) ? true : false;
+        $this->laporanPolisi = (isset($this->request->berkas_laporan_polisi)) ? true : false;
         $this->sppp = (isset($this->request->berkas_sp_pp)) ? true : false;
         $this->beritaAcara = (isset($this->request->berkas_berita_acara)) ? true : false;
         $this->suratPenerimaan = (isset($this->request->berkas_surat_penerimaan)) ? true : false;
         $this->spPenyidikan = (isset($this->request->berkas_sp_penyidikan)) ? true : false;
         $this->spdp = (isset($this->request->berkas_spdp)) ? true : false;
-        $this->resume = (isset($this->request->berkas_resume)) ? true : false;        
-        
+        $this->resume = (isset($this->request->berkas_resume)) ? true : false;
+
+        //Barang Bukti
+        $this->i = count($this->evidence);
+        $this->i--;
+        foreach ($this->evidence as $key => $bukti) {
+            $this->inputs[] = $bukti->barang_bukti;
+            $this->barang_bukti[] = $bukti->barang_bukti;
+        }        
     }
-    
+
     public function render()
-    {                
+    {
         return view('livewire.user-edit-request');
+    }
+
+    public function add($i)
+    {
+        $i = $i + 1;
+        $this->i = $i;
+        array_push($this->inputs, $i);
+    }
+
+    public function remove($i)
+    {
+        $this->deleted_evidence[] = $this->inputs[$i];
+        unset($this->inputs[$i]);
+        unset($this->barang_bukti[$i]);
     }
 
     public function update()
     {
-        $request = $this->validate();        
-        $update = Request::findOrFail($this->request->id);
-        $update->email = $request['email'];
-        $update->no_hp = $request['no_hp'];
-        $update->no_surat_permohonan = $request['no_surat_permohonan'];
-        $update->tgl_surat_permohonan = $request['tgl_surat_permohonan'];
-        $update->jenis_permohonan = $request['jenis_permohonan'];
-        $update->penyitaan_penggeledahan = $request['penyitaan_penggeledahan'];
-        $update->tgl_sita_geledah = ($request['penyitaan_penggeledahan'] == 'sudah') ? $request['tgl_sita_geledah'] : null;
-        $update->pasal = $request['pasal'];
-        $update->barang_bukti = $request['barang_bukti'];
-        $update->sumber = $request['sumber'];
-        $update->nama_tersangka = $request['nama_tersangka'];
-        $update->tempat_lahir = $request['tempat_lahir'];
-        $update->tgl_lahir = $request['tgl_lahir'];
-        $update->alamat = $request['alamat'];           
-
-        //Simpan Berkas-Berkas
-        if (isset($request['berkas_surat_permohonan'])) {
-            $request['berkas_surat_permohonan']->store('berkas');
-            $update->berkas_surat_permohonan = $request['berkas_surat_permohonan']->hashName();
+        if (auth()->user()->cannot('Edit Permohonan')) {
+            abort(403);
         }
 
-        if (isset($request['berkas_laporan_polisi'])) {
-            $request['berkas_laporan_polisi']->store('berkas');                      
-            $update->berkas_laporan_polisi = $request['berkas_laporan_polisi']->hashName();
-        }
+        $request = $this->validate();
+        DB::transaction(function () use ($request) {
+            $update = Request::findOrFail($this->request->id);
+            $update->email = $request['email'];
+            $update->no_hp = $request['no_hp'];
+            $update->no_surat_permohonan = $request['no_surat_permohonan'];
+            $update->tgl_surat_permohonan = $request['tgl_surat_permohonan'];
+            $update->jenis_permohonan = $request['jenis_permohonan'];
+            $update->penyitaan_penggeledahan = $request['penyitaan_penggeledahan'];
+            $update->tgl_sita_geledah = ($request['penyitaan_penggeledahan'] == 'sudah') ? $request['tgl_sita_geledah'] : null;
+            $update->pasal = $request['pasal'];
+            $update->sumber = $request['sumber'];
+            $update->nama_tersangka = $request['nama_tersangka'];
+            $update->tempat_lahir = $request['tempat_lahir'];
+            $update->tgl_lahir = $request['tgl_lahir'];
+            $update->alamat = $request['alamat'];
 
-        if (isset($request['berkas_sp_pp'])) {
-            $request['berkas_sp_pp']->store('berkas');
-            $update->berkas_sp_pp = $request['berkas_sp_pp']->hashName();
-        }
+            //Simpan Berkas-Berkas
+            if (isset($request['berkas_surat_permohonan'])) {
+                $request['berkas_surat_permohonan']->store('berkas');
+                $update->berkas_surat_permohonan = $request['berkas_surat_permohonan']->hashName();
+            }
 
-        if (isset($request['berkas_berita_acara'])) {
-            $request['berkas_berita_acara']->store('berkas');
-            $update->berkas_berita_acara = $request['berkas_berita_acara']->hashName();
-        }
+            if (isset($request['berkas_laporan_polisi'])) {
+                $request['berkas_laporan_polisi']->store('berkas');
+                $update->berkas_laporan_polisi = $request['berkas_laporan_polisi']->hashName();
+            }
 
-        if (isset($request['berkas_surat_penerimaan'])) {
-            $request['berkas_surat_penerimaan']->store('berkas');
-            $update->berkas_surat_penerimaan = $request['berkas_surat_penerimaan']->hashName();
-        }
+            if (isset($request['berkas_sp_pp'])) {
+                $request['berkas_sp_pp']->store('berkas');
+                $update->berkas_sp_pp = $request['berkas_sp_pp']->hashName();
+            }
 
-        if (isset($request['berkas_sp_penyidikan'])) {
-            $request['berkas_sp_penyidikan']->store('berkas');
-            $update->berkas_sp_penyidikan = $request['berkas_sp_penyidikan']->hashName();
-        }
+            if (isset($request['berkas_berita_acara'])) {
+                $request['berkas_berita_acara']->store('berkas');
+                $update->berkas_berita_acara = $request['berkas_berita_acara']->hashName();
+            }
 
-        if (isset($request['berkas_spdp'])) {
-            $request['berkas_spdp']->store('berkas');
-            $update->berkas_spdp = $request['berkas_spdp']->hashName();
-        }
+            if (isset($request['berkas_surat_penerimaan'])) {
+                $request['berkas_surat_penerimaan']->store('berkas');
+                $update->berkas_surat_penerimaan = $request['berkas_surat_penerimaan']->hashName();
+            }
 
-        if (isset($request['berkas_resume'])) {
-            $request['berkas_resume']->store('berkas');
-            $update->berkas_resume = $request['berkas_resume']->hashName();
-        }
+            if (isset($request['berkas_sp_penyidikan'])) {
+                $request['berkas_sp_penyidikan']->store('berkas');
+                $update->berkas_sp_penyidikan = $request['berkas_sp_penyidikan']->hashName();
+            }
 
-        $update->save();
+            if (isset($request['berkas_spdp'])) {
+                $request['berkas_spdp']->store('berkas');
+                $update->berkas_spdp = $request['berkas_spdp']->hashName();
+            }
+
+            if (isset($request['berkas_resume'])) {
+                $request['berkas_resume']->store('berkas');
+                $update->berkas_resume = $request['berkas_resume']->hashName();
+            }
+
+            $update->save();
+
+            //Delete & Update
+            $update->evidence_lists()->whereIn('barang_bukti', $this->deleted_evidence)->delete();
+
+            foreach ($this->barang_bukti as $bukti) {
+                $update_barang_bukti = EvidenceList::updateOrCreate(
+                    ['request_id' => $this->request->id, 'barang_bukti' => $bukti],
+                    ['barang_bukti' => $bukti]
+                );
+            }
+
+            session()->flash('flash.banner', 'Permohonan berhasil diperbarui!');
+            session()->flash('flash.bannerStyle', 'success');
+        });
+        return redirect(route('permohonan.index'));
+    }
+
+    public function download($file, $name)
+    {
+        $path = storage_path('app/berkas/' . $file);
+        $extension = pathinfo($path, PATHINFO_EXTENSION);        
+        return response()->download($path, $name . '.' . $extension);
+    }
+
+    public function verify($status)
+    {
+        if (auth()->user()->cannot('Verifikasi Permohonan')) {
+            abort(403);
+        }
+        if ($status == 'setuju') {
+            $this->request_status->status = 'disetujui';
+        } else {
+            $this->request_status->status = 'ditolak';
+        }
+        $this->request_status->save();
         session()->flash('flash.banner', 'Permohonan berhasil diperbarui!');
-        session()->flash('flash.bannerStyle', 'success');    
-
+        session()->flash('flash.bannerStyle', 'success');
         return redirect(route('permohonan.index'));
     }
 }
