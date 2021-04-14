@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\EvidenceList;
+use App\Models\Notification;
 use App\Models\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -14,8 +15,7 @@ class UserEditRequest extends Component
     public $request, $evidence, $barang_bukti;
 
     public $i = 0;
-    public $inputs = [];
-    public $deleted_evidence = [];
+    public $inputs = [];    
     public $request_status;
 
     use WithFileUploads;
@@ -24,7 +24,7 @@ class UserEditRequest extends Component
 
     public $file_surat_permohonan, $file_laporan_polisi, $file_sp_pp, $file_berita_acara, $file_surat_penerimaan, $file_sp_penyidikan, $file_spdp, $file_resume;
 
-    public $user_id, $asal_instansi, $email, $no_hp, $no_surat_permohonan, $tgl_surat_permohonan, $jenis_permohonan, $penyitaan_penggeledahan, $tgl_sita_geledah, $berkas_surat_permohonan, $berkas_laporan_polisi, $berkas_sp_pp, $berkas_berita_acara, $berkas_surat_penerimaan, $berkas_sp_penyidikan, $berkas_spdp, $berkas_resume, $pasal, $sumber, $nama_tersangka, $tempat_lahir, $tgl_lahir, $alamat;
+    public $user_id, $asal_instansi, $email, $no_hp, $no_surat_permohonan, $tgl_surat_permohonan, $jenis_permohonan, $penyitaan_penggeledahan, $tgl_sita_geledah, $berkas_surat_permohonan, $berkas_laporan_polisi, $berkas_sp_pp, $berkas_berita_acara, $berkas_surat_penerimaan, $berkas_sp_penyidikan, $berkas_spdp, $berkas_resume, $pasal, $sumber, $nama_tersangka, $tempat_lahir, $tgl_lahir, $jenis_kelamin, $kebangsaan, $alamat, $agama, $pekerjaan;
 
     protected $rules = [
         'asal_instansi' => 'required',
@@ -49,6 +49,10 @@ class UserEditRequest extends Component
         'nama_tersangka' => 'required',
         'tempat_lahir' => 'required',
         'tgl_lahir' => 'required|date',
+        'jenis_kelamin' => 'required',
+        'kebangsaan' => 'required',
+        'agama' => 'required',
+        'pekerjaan' => 'required',
         'alamat' => 'required',
     ];
 
@@ -94,18 +98,15 @@ class UserEditRequest extends Component
         'nama_tersangka.required' => ':attribute tidak boleh kosong!',
         'tempat_lahir.required' => ':attribute tidak boleh kosong!',
         'tgl_lahir.required' => ':attribute tidak boleh kosong!',
+        'jenis_kelamin.required' => ':attribute tidak boleh kosong!',
+        'agama.required' => ':attribute tidak boleh kosong!',
+        'pekerjaan.required' => ':attribute tidak boleh kosong!',
+        'kebangsaan.required' => ':attribute tidak boleh kosong!',
         'alamat.required' => ':attribute tidak boleh kosong!',
     ];
 
     public function mount()
     {        
-        if (auth()->user()->can('Verifikasi Permohonan')) {
-            $this->request_status = Request::findOrFail($this->request->id);
-            if ($this->request_status->status == 'menunggu') {
-                $this->request_status->status = 'sedang diproses';
-                $this->request_status->save();
-            }
-        }
         $this->user_id = $this->request->user_id;
         $this->asal_instansi = $this->request->asal_instansi;
         $this->email = $this->request->email;
@@ -121,6 +122,10 @@ class UserEditRequest extends Component
         $this->tempat_lahir = $this->request->tempat_lahir;
 
         $this->tgl_lahir = date('Y-m-d', strtotime($this->request->tgl_lahir));
+        $this->jenis_kelamin = $this->request->jenis_kelamin;
+        $this->agama = $this->request->agama;
+        $this->pekerjaan = $this->request->pekerjaan;
+        $this->kebangsaan = $this->request->kebangsaan;
         $this->alamat = $this->request->alamat;
 
         $this->file_surat_permohonan = ['name' => 'Surat Permohonan', 'link' => $this->request->berkas_surat_permohonan];
@@ -147,7 +152,7 @@ class UserEditRequest extends Component
         foreach ($this->evidence as $key => $bukti) {
             $this->inputs[] = $bukti->barang_bukti;
             $this->barang_bukti[] = $bukti->barang_bukti;
-        }        
+        }
     }
 
     public function render()
@@ -163,10 +168,9 @@ class UserEditRequest extends Component
     }
 
     public function remove($i)
-    {
-        $this->deleted_evidence[] = $this->inputs[$i];
+    {        
         unset($this->inputs[$i]);
-        unset($this->barang_bukti[$i]);
+        unset($this->barang_bukti[$i]);        
     }
 
     public function update()
@@ -190,6 +194,10 @@ class UserEditRequest extends Component
             $update->nama_tersangka = $request['nama_tersangka'];
             $update->tempat_lahir = $request['tempat_lahir'];
             $update->tgl_lahir = $request['tgl_lahir'];
+            $update->jenis_kelamin = $request['jenis_kelamin'];
+            $update->agama = $request['agama'];
+            $update->pekerjaan = $request['pekerjaan'];
+            $update->kebangsaan = $request['kebangsaan'];
             $update->alamat = $request['alamat'];
 
             //Simpan Berkas-Berkas
@@ -236,10 +244,10 @@ class UserEditRequest extends Component
             $update->save();
 
             //Delete & Update
-            $update->evidence_lists()->whereIn('barang_bukti', $this->deleted_evidence)->delete();
+            $update->evidence_lists()->delete();
 
             foreach ($this->barang_bukti as $bukti) {
-                $update_barang_bukti = EvidenceList::updateOrCreate(
+                $update_barang_bukti = EvidenceList::create(
                     ['request_id' => $this->request->id, 'barang_bukti' => $bukti],
                     ['barang_bukti' => $bukti]
                 );
@@ -254,23 +262,8 @@ class UserEditRequest extends Component
     public function download($file, $name)
     {
         $path = storage_path('app/berkas/' . $file);
-        $extension = pathinfo($path, PATHINFO_EXTENSION);        
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
         return response()->download($path, $name . '.' . $extension);
     }
-
-    public function verify($status)
-    {
-        if (auth()->user()->cannot('Verifikasi Permohonan')) {
-            abort(403);
-        }
-        if ($status == 'setuju') {
-            $this->request_status->status = 'disetujui';
-        } else {
-            $this->request_status->status = 'ditolak';
-        }
-        $this->request_status->save();
-        session()->flash('flash.banner', 'Permohonan berhasil diperbarui!');
-        session()->flash('flash.bannerStyle', 'success');
-        return redirect(route('permohonan.index'));
-    }
+    
 }

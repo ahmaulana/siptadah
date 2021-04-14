@@ -42,7 +42,7 @@
 
                                 <div class="col-span-6 sm:col-span-4">
                                     <label for="no_surat_permohonan" class="block text-sm font-medium text-gray-700">Nomor Surat Permohonan</label>
-                                    <input type="number" wire:model="no_surat_permohonan" id="no_surat_permohonan" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <input type="text" wire:model="no_surat_permohonan" id="no_surat_permohonan" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                     @error('no_surat_permohonan') <span class="error text-red-500">{{ $message }}</span> @enderror
                                 </div>
 
@@ -150,7 +150,7 @@
                                         </div>
                                         @if($file_surat_permohonan['link'])
                                         <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
-                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini:                                                
+                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini:
                                                 <a wire:click="download('{{ $file_surat_permohonan['link'] }}','{{ $file_surat_permohonan['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">
                                                     Lihat
                                                 </a>
@@ -406,8 +406,8 @@
                                 <div class="flex">
                                     <input type="text" wire:model="barang_bukti.{{ $key }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                     @error('barang_bukti.{{ $key }}') <span class="error text-red-500">{{ $message }}</span> @enderror
-
-                                    <button wire:click.prevent="remove({{ $key }})" class="bg-red-700 ml-1 text-white text-xs px-4 py-2 rounded-full shadow hover:bg-red-900 outline-none focus:outline-none mr-1 mb-1">Hapus</button>
+                                    
+                                    <button wire:click.prevent="remove({{ $key }})" class="bg-red-700 ml-1 text-white text-xs px-4 py-2 rounded-full shadow hover:bg-red-900 outline-none focus:outline-none mr-1 mb-1" {{ count($inputs) == 1 ? 'disabled' : '' }}>Hapus</button>
 
                                 </div>
                             </div>
@@ -498,6 +498,39 @@
                         </div>
 
                         <div class="col-span-6">
+                            <label for="jenis_kelamin" class="block text-sm font-medium text-gray-700">Jenis Kelamin</label>
+                            <select wire:model="jenis_kelamin" id="jenis_kelamin" name="jenis_kelamin" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="">Pilih jenis kelamin...</option>
+                                <option wire-click="$jenis_kelamin='Laki-laki'" value="Laki-laki">Laki-laki</option>
+                                <option value="Perempuan">Perempuan</option>
+                            </select>                            
+                        </div>
+
+                        <div class="col-span-6">
+                            <label for="agama" class="block text-sm font-medium text-gray-700">Agama</label>
+                            <select wire:model="agama" id="agama" name="agama" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="">Pilih agama...</option>
+                                <option value="Islam">Islam</option>
+                                <option value="Kristen">Kristen</option>
+                                <option value="Katolik">Katolik</option>
+                                <option value="Hindu">Hindu</option>
+                                <option value="Buddha">Buddha</option>
+                                <option value="Konghucu">Konghucu</option>
+                            </select>                            
+                        </div>
+
+                        <div class="col-span-6">
+                            <label for="pekerjaan" class="block text-sm font-medium text-gray-700">Pekerjaan</label>
+                            <input type="text" wire:model="pekerjaan" id="pekerjaan" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">                            
+                        </div>
+
+                        <div class="col-span-6">
+                            <label for="kebangsaan" class="block text-sm font-medium text-gray-700">Kebangsaan</label>
+                            <input type="text" wire:model="kebangsaan" id="kebangsaan" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            @error('kebangsaan') <span class="error text-red-500">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div class="col-span-6">
                             <label for="alamat" class="block text-sm font-medium text-gray-700">
                                 Alamat Tersangka/Terlapor
                             </label>
@@ -507,17 +540,7 @@
                             @error('alamat') <span class="error text-red-500">{{ $message }}</span> @enderror
                         </div>
                     </div>
-                </div>
-                @can('Verifikasi Permohonan')
-                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                    <button wire:click="verify('tolak')" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                        Tolak
-                    </button>
-                    <button wire:click="verify('setuju')" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Setuju
-                    </button>
-                </div>
-                @else
+                </div>                
                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
                     <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Update

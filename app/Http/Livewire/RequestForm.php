@@ -18,7 +18,7 @@ class RequestForm extends Component
 
     public $suratPermohonan, $laporanPolisi, $sppp, $beritaAcara, $suratPenerimaan, $spPenyidikan, $spdp, $resume;
 
-    public $email, $no_hp, $no_surat_permohonan, $tgl_surat_permohonan, $jenis_permohonan, $penyitaan_penggeledahan, $tgl_sita_geledah, $berkas_surat_permohonan, $berkas_laporan_polisi, $berkas_sp_pp, $berkas_berita_acara, $berkas_surat_penerimaan, $berkas_sp_penyidikan, $berkas_spdp, $berkas_resume, $pasal, $barang_bukti, $sumber, $nama_tersangka, $tempat_lahir, $tgl_lahir, $alamat;
+    public $email, $no_hp, $no_surat_permohonan, $tgl_surat_permohonan, $jenis_permohonan, $penyitaan_penggeledahan, $tgl_sita_geledah, $berkas_surat_permohonan, $berkas_laporan_polisi, $berkas_sp_pp, $berkas_berita_acara, $berkas_surat_penerimaan, $berkas_sp_penyidikan, $berkas_spdp, $berkas_resume, $pasal, $barang_bukti, $sumber, $nama_tersangka, $tempat_lahir, $tgl_lahir, $jenis_kelamin, $kebangsaan = 'Indonesia', $alamat, $agama, $pekerjaan;
 
     protected $rules = [
         'email' => 'required|email',
@@ -42,6 +42,10 @@ class RequestForm extends Component
         'nama_tersangka' => 'required',
         'tempat_lahir' => 'required',
         'tgl_lahir' => 'required|date',
+        'jenis_kelamin' => 'required',
+        'kebangsaan' => 'required',
+        'agama' => 'required',
+        'pekerjaan' => 'required',
         'alamat' => 'required',
     ];
 
@@ -86,11 +90,18 @@ class RequestForm extends Component
         'nama_tersangka.required' => ':attribute tidak boleh kosong!',
         'tempat_lahir.required' => ':attribute tidak boleh kosong!',
         'tgl_lahir.required' => 'Tanggal tidak boleh kosong!',
+        'jenis_kelamin.required' => ':attribute tidak boleh kosong!',
+        'agama.required' => ':attribute tidak boleh kosong!',
+        'pekerjaan.required' => ':attribute tidak boleh kosong!',
+        'kebangsaan.required' => ':attribute tidak boleh kosong!',
         'alamat.required' => ':attribute tidak boleh kosong!',
     ];
 
     public function render()
-    {
+    {      
+        if(!User::findOrFail(auth()->user()->id)->hasPermissionTo('Input Permohonan')){
+            abort(403);
+        }
         return view('livewire.request-form');
     }
 
@@ -106,11 +117,11 @@ class RequestForm extends Component
         unset($this->inputs[$i]);
         unset($this->barang_bukti[$i + 1]);
     }
-
+    
     public function submit()
     {        
         //Validasi Inputan User             
-        $request = $this->validate();                
+        $request = $this->validate();            
         //Simpan Berkas-Berkas
         if (isset($request['berkas_surat_permohonan'])) {
             $request['berkas_surat_permohonan']->store('berkas');

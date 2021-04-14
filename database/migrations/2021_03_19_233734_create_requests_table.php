@@ -12,7 +12,7 @@ class CreateRequestsTable extends Migration
      * @return void
      */
     public function up()
-    {
+    {        
         Schema::create('requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
@@ -37,8 +37,12 @@ class CreateRequestsTable extends Migration
             $table->string('nama_tersangka');
             $table->string('tempat_lahir');
             $table->dateTime('tgl_lahir');
+            $table->string('jenis_kelamin');
+            $table->string('kebangsaan')->default('Indonesia');
             $table->text('alamat');
-            $table->enum('status',['menunggu','sedang diproses', 'disetujui', 'ditolak'])->default('menunggu');
+            $table->string('agama');
+            $table->string('pekerjaan');
+            $table->enum('status',['menunggu','sedang diproses', 'disetujui', 'ditolak', 'selesai'])->default('menunggu');
             $table->timestamps();
         });
     }
