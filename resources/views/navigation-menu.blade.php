@@ -18,9 +18,13 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     @can('Kelola Permohonan')
                     <x-jet-nav-link href="{{ route('permohonan.index') }}" :active="(request()->routeIs('permohonan.*')) ? true : false">
-                        {{ __('Permohonan') }}
+                        {{ __('Sita Geledah') }}
                     </x-jet-nav-link>
                     @endcan
+
+                    <x-jet-nav-link href="{{ route('tahanan.index') }}" :active="(request()->routeIs('tahanan.*')) ? true : false">
+                        {{ __('Tahanan') }}
+                    </x-jet-nav-link>
 
                     @can('Kelola User')
                     <x-jet-nav-link href="{{ route('kelola-user.index') }}" :active="(request()->routeIs('kelola-user.*') || request()->routeIs('kelola-role.*') || request()->routeIs('kelola-permission.*')) ? true : false">
