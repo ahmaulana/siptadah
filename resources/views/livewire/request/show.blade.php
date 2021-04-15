@@ -11,7 +11,7 @@
                 </p>
             </div>
             <div class="flex-1 text-right sm:px-6">
-                @if($data->status == 'menunggu' || $data->staus == 'dalam proses')
+                @if($data->status == 'menunggu' || $data->status == 'sedang diproses')
                 @can('Verifikasi Permohonan')
                 <button wire:click="verify('tolak')" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                     Tolak
@@ -20,9 +20,10 @@
                     Setuju
                 </button>
                 @else
-                <button class="rounded-full py-2 px-2 bg-green-600 text-xs leading-6 font-medium text-white">
-                    Sedang diproses }}
-                </button>
+                <div class="text-sm bg-green-600 text-white">
+                    <p class="text-lg"><strong>Permohonan sedang diproses!</strong></p>
+                    <p class="text-sm">Permohonan Anda sedang diproses, mohon menunggu</p>
+                </div>
                 @endcan
                 @elseif($data->status == 'disetujui')
                 @can('Verifikasi Permohonan')
@@ -31,23 +32,23 @@
                 </button>
                 @else
                 <div class="text-sm bg-green-600 text-white">
-                <p class="text-lg"><strong>Permohonan disetujui!</strong></p>
-                <p class="text-sm">Silahkan ambil dokumen ke kantor dengan membawa berkas-berkas dan e-ticket</p>
+                    <p class="text-lg"><strong>Permohonan disetujui!</strong></p>
+                    <p class="text-sm">Silahkan ambil dokumen ke kantor dengan membawa berkas-berkas dan e-ticket</p>
                 </div>
-                @endcan                
+                @endcan
                 @elseif($data->status == 'ditolak')
                 <div class="bg-red-600 text-white">
-                <p class="text-lg"><strong>Permohonan ditolak!</strong></p>
-                @cannot('Verifikasi Permohonan')
-                <p class="text-sm">Mohon maaf permohonan Anda tidak disetujui, silahkan ajukan permohonan baru</p>
-                @endcan
+                    <p class="text-lg"><strong>Permohonan ditolak!</strong></p>
+                    @cannot('Verifikasi Permohonan')
+                    <p class="text-sm">Mohon maaf permohonan Anda tidak disetujui, silahkan ajukan permohonan baru</p>
+                    @endcan
                 </div>
                 @else
                 <div class="bg-green-600 text-white">
-                <p class="text-lg"><strong>Permohonan selesai!</strong></p>                
-                <p class="text-sm">Permohonan selesai diproses pada {{ date('d/m/Y', strtotime($data->updated_at)) }}</p>
-                </div>                
-                @endif                
+                    <p class="text-lg"><strong>Permohonan selesai!</strong></p>
+                    <p class="text-sm">Permohonan selesai diproses pada {{ date('d/m/Y', strtotime($data->updated_at)) }}</p>
+                </div>
+                @endif
             </div>
         </div>
         <div class="border-t border-gray-200">

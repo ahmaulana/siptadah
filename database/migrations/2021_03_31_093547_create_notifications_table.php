@@ -17,7 +17,7 @@ class CreateNotificationsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->string('message');
-            $table->boolean('status')->defaul(0);
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
     }

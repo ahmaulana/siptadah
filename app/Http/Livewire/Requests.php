@@ -14,6 +14,7 @@ use Spatie\Permission\Models\Role;
 class Requests extends LivewireDatatable
 {
     public $model = ModelsRequest::class;
+    public $exportable = true;
 
     public function builder()
     {
@@ -46,7 +47,7 @@ class Requests extends LivewireDatatable
 
             Column::name('status')
                 ->label('Status')
-                ->filterable(['menunggu', 'sedang diproses', 'disetujui', 'ditolak']),
+                ->filterable(['menunggu', 'sedang diproses', 'disetujui', 'ditolak', 'selesai']),
 
             DateColumn::name('updated_at')
                 ->label('Diperbarui'),
@@ -54,29 +55,28 @@ class Requests extends LivewireDatatable
             Column::callback(['id', 'status'], function ($id, $status) {
                 return view('table-actions', ['id' => $id, 'status' => $status]);
             })
-                ->label('Aksi')->alignCenter(),            
+                ->label('Aksi')->alignCenter(),
         ];
     }
 
     public function delete($id)
-    {                
+    {
         $request = ModelsRequest::findOrFail($id);
-        if($request->user_id == auth()->user()->id)
-        {
+        if ($request->user_id == auth()->user()->id || auth()->user()->hasRole(['Admin', 'admin'])) {
             $request->delete();
         }
     }
 
     public function export_sp($id)
-    {        
+    {
         $request = ModelsRequest::findOrFail($id);
-        $evidence_lists = ModelsRequest::findOrFail($id)->evidence_lists;        
-        $surat = new TemplateProcessor(storage_path('app/template/sita.docx'));
+        $evidence_lists = ModelsRequest::findOrFail($id)->evidence_lists;
+        $surat = new TemplateProcessor(storage_path('app/template/' . $request->jenis_permohonan . '.docx'));
         $surat->setValues([
             'no_surat_permohonan' => $request->no_surat_permohonan,
             'tgl_surat_permohonan' => Carbon::parse($request->tgl_surat_permohonan)->isoFormat('D MMMM Y'),
             'pasal' => $request->pasal,
-            'nama_tersangka' => $request->nama_tersangka,
+            'nama_tersangka' => ucfirst($request->nama_tersangka),
             'tempat_lahir' => $request->tempat_lahir,
             'umur' => Carbon::parse($request->tgl_lahir)->age,
             'tgl_lahir' => Carbon::parse($request->tgl_lahir)->isoFormat('D MMMM Y'),
@@ -90,12 +90,12 @@ class Requests extends LivewireDatatable
 
         $surat->cloneBlock('list_barang_bukti', count($evidence_lists), true, true);
         $no = 1;
-        foreach ($evidence_lists as $key => $evidence_list) {            
+        foreach ($evidence_lists as $key => $evidence_list) {
             $surat->setValue('barang_bukti#' . $no, $evidence_list->barang_bukti);
             $no++;
         }
 
-        $file_name = 'surat ' . $request->jenis_permohonan . '.docx';
+        $file_name = 'Surat ' . ucfirst($request->jenis_permohonan) . ' ' . $request->no_surat_permohonan . '.docx';
         $surat->saveAs($file_name);
         return response()->download(public_path($file_name))->deleteFileAfterSend();
     }
@@ -106,18 +106,61 @@ class Requests extends LivewireDatatable
 
         $evidence_lists = ModelsRequest::findOrFail($id)->evidence_lists;
 
-        $ticket = new TemplateProcessor(storage_path('app/template/surat.docx'));
+        $ticket = new TemplateProcessor(storage_path('app/template/e-ticket-siptadah.docx'));
         $ticket->setValues([
             'id' => $request->id,
             'asal_instansi' => $request->asal_instansi,
             'email' => $request->email,
+            'no_hp' => $request->no_hp,
             'no_surat_permohonan' => $request->no_surat_permohonan,
-            'tgl_surat_permohonan' => $request->tgl_surat_permohonan,
-            'jenis_permohonan' => $request->jenis_permohonan,
+            'tgl_surat_permohonan' => Carbon::parse($request->tgl_surat_permohonan)->isoFormat('D MMMM Y'),
+            'jenis_permohonan' => ucfirst($request->jenis_permohonan),
             'penyitaan_penggeledahan' => $request->penyitaan_penggeledahan,
-            'tgl_sita_geledah' => $request->tgl_sita_geledah,
+            'tgl_sita_geledah' => Carbon::parse($request->tgl_sita_geledah)->isoFormat('D MMMM Y'),
+            'pasal' => $request->pasal,
+            'sumber' => $request->sumber,
+            'nama_tersangka' => ucfirst($request->nama_tersangka),
+            'tempat_lahir' => $request->tempat_lahir,
+            'tgl_lahir' => Carbon::parse($request->tgl_lahir)->isoFormat('D MMMM Y'),
+            'umur' => Carbon::parse($request->tgl_lahir)->age,
+            'alamat' => $request->alamat,
+            'tgl_sekarang' => Carbon::now()->isoFormat('D MMMM Y'),
         ]);
 
-        dd('OK');
+        $files = [
+            ['name' => 'Surat Permohonan', 'link' => $request->berkas_surat_permohonan],
+            ['name' => 'Laporan Polisi', 'link' => $request->berkas_laporan_polisi],
+            ['name' => 'Surat Perintah Penyitaan/Penggeledahan', 'link' => $request->berkas_sp_pp],
+            ['name' => 'Berita Acara Penyitaan/Penggeledahan', 'link' => $request->berkas_berita_acara],
+            ['name' => 'Surat Tanda Penerimaan', 'link' => $request->berkas_surat_penerimaan],
+            ['name' => 'Surat Perintah Penyidikan', 'link' => $request->berkas_sp_penyidikan],
+            ['name' => 'Surat Perintah Dimulainya Penyidikan (SPDP)', 'link' => $request->berkas_spdp],
+            ['name' => 'Resume', 'link' => $request->berkas_resume]
+        ];
+
+        //Jumlah dokumen yang diupload
+        foreach ($files as $document) {
+            if (isset($document['link'])) {
+                $documents[]['name'] = $document['name'];
+            }
+        }
+
+        $ticket->cloneBlock('list_berkas', count($documents), true, true);
+        $no = 1;
+        foreach ($documents as $key => $berkas) {
+            $ticket->setValue('berkas#' . $no, $berkas['name']);
+            $no++;
+        }
+
+        $ticket->cloneBlock('list_barang_bukti', count($evidence_lists), true, true);
+        $no = 1;
+        foreach ($evidence_lists as $key => $evidence_list) {
+            $ticket->setValue('barang_bukti#' . $no, $evidence_list->barang_bukti);
+            $no++;
+        }
+
+        $file_name = 'E-ticket ' . $request->no_surat_permohonan . '.docx';
+        $ticket->saveAs($file_name);
+        return response()->download(public_path($file_name))->deleteFileAfterSend();
     }
 }

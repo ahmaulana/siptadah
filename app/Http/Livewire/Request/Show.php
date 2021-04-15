@@ -10,21 +10,20 @@ use Livewire\Component;
 class Show extends Component
 {
     public $request;
-    public $request_status;
+    public $request_data;
 
     public function render()
-    {
-        $data = Request::findOrFail($this->request);
-
-        if (auth()->user()->can('Verifikasi Permohonan')) {
-            $this->request_status = Request::findOrFail($this->request);
-            if ($this->request_status->status == 'menunggu') {
-                $this->request_status->status = 'sedang diproses';
-                $this->request_status->save();
+    {        
+        $this->request_data = Request::findOrFail($this->request);
+        $data = $this->request_data;
+        if (auth()->user()->can('Verifikasi Permohonan')) {            
+            if ($data->status == 'menunggu') {
+                $data->status = 'sedang diproses';
+                $data->save();
             }
         }
 
-        $barang_bukti = Request::findOrFail($this->request)->evidence_lists;
+        $barang_bukti = $data->evidence_lists;
         $files = [
             ['name' => 'Surat Permohonan', 'link' => $data->berkas_surat_permohonan],
             ['name' => 'Laporan Polisi', 'link' => $data->berkas_laporan_polisi],
@@ -46,16 +45,16 @@ class Show extends Component
     }
 
     public function verify($status)
-    {
+    {        
         if (auth()->user()->cannot('Verifikasi Permohonan')) {
             abort(403);
         }
 
-        $request_status = $this->request_status;
+        $request_status = $this->request_data;
         DB::transaction(function () use ($status, $request_status) {
             if ($status == 'setuju') {
                 $request_status->status = 'disetujui';
-                $message = '<strong>Permohonan nomor ' . $request_status->no_surat_permohonan . ' disetujui!</strong> Silahkan ambil dokumen ke kantor dengan membawa berkas-berkas dan e-ticket.';
+                $message = 'Permohonan nomor ' . $request_status->no_surat_permohonan . ' disetujui! Silahkan ambil dokumen ke kantor dengan membawa berkas-berkas dan e-ticket.';
             } else if ($status == 'selesai') {
                 $request_status->status = 'selesai';
                 $message = 'Permohonan ' . $request_status->no_surat_permohonan . ' selesai diproses!';
@@ -65,7 +64,7 @@ class Show extends Component
             }
 
             $notify = Notification::create([
-                'user_id' => auth()->user()->id,
+                'user_id' => $this->request_data->user_id,
                 'message' => $message,
             ]);
             $request_status->save();
