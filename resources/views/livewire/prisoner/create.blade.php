@@ -23,6 +23,22 @@
                         <div class="shadow overflow-hidden sm:rounded-md">
                             <div class="px-4 py-5 bg-white sm:p-6">
                                 <div class="grid grid-cols-6 gap-6">
+                                    <div class="col-span-6 sm:col-span-3">
+                                        <label for="email" class="block text-sm font-medium text-gray-700">Email Aktif (Untuk Verifikasi Lanjutan)</label>
+                                        <input type="text" wire:model="email" id="email" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                        @error('email') <span class="error text-red-500">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <div class="col-span-6 sm:col-span-3">
+                                        <label for="no_hp" class="block text-sm font-medium text-gray-700">Nomor Hp</label>
+                                        <div class="mt-1 flex rounded-md shadow-sm">
+                                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                                                +62
+                                            </span>
+                                            <input type="number" wire:model="no_hp" id="no_hp" class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300" placeholder="">
+                                        </div>
+                                        @error('no_hp') <span class="error text-red-500">{{ $message }}</span> @enderror
+                                    </div>
                                     <div class="col-span-6">
                                         <label for="no_surat" class="block text-sm font-medium text-gray-700">Nomor Surat</label>
                                         <input type="text" wire:model="no_surat" id="no_surat" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
@@ -275,7 +291,7 @@
                                             @endif
                                             <div>
                                                 <div wire:loading wire:target="berkas_berita_acara">Mohon tunggu...</div>
-                                            </div>                                            
+                                            </div>
 
                                             <div class="flex items-start">
                                                 <div class="flex items-center h-5">

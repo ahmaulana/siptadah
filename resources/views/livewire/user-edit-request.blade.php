@@ -180,9 +180,10 @@
                                                 <input type="file" wire:model="berkas_laporan_polisi" id="berkas_laporan_polisi" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
                                             </div>
                                         </div>
-                                        @if($file_laporan_polisi)
+                                        @if($file_laporan_polisi['link'])
                                         <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
-                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
+                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_laporan_polisi['link'] }}','{{ $file_laporan_polisi['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
+                                            </label>
                                         </div>
                                         @endif
                                     </div>
@@ -208,9 +209,10 @@
                                                 <input type="file" wire:model="berkas_sp_pp" id="berkas_sp_pp" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
                                             </div>
                                         </div>
-                                        @if($file_sp_pp)
+                                        @if($file_sp_pp['link'])
                                         <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
-                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
+                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_sp_pp['link'] }}','{{ $file_sp_pp['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
+                                            </label>
                                         </div>
                                         @endif
                                     </div>
@@ -236,9 +238,10 @@
                                                 <input type="file" wire:model="berkas_berita_acara" id="berkas_berita_acara" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
                                             </div>
                                         </div>
-                                        @if($file_berita_acara)
+                                        @if($file_berita_acara['link'])
                                         <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
-                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
+                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_berita_acara['link'] }}','{{ $file_berita_acara['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
+                                            </label>
                                         </div>
                                         @endif
                                     </div>
@@ -264,9 +267,10 @@
                                                 <input type="file" wire:model="berkas_surat_penerimaan" id="berkas_surat_penerimaan" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
                                             </div>
                                         </div>
-                                        @if($file_surat_penerimaan)
+                                        @if($file_surat_penerimaan['link'])
                                         <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
-                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
+                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_surat_penerimaan['link'] }}','{{ $file_surat_penerimaan['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
+                                            </label>
                                         </div>
                                         @endif
                                     </div>
@@ -292,9 +296,10 @@
                                                 <input type="file" wire:model="berkas_sp_penyidikan" id="berkas_sp_penyidikan" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
                                             </div>
                                         </div>
-                                        @if($file_sp_penyidikan)
+                                        @if($file_sp_penyidikan['link'])
                                         <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
-                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
+                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_sp_penyidikan['link'] }}','{{ $file_sp_penyidikan['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
+                                            </label>
                                         </div>
                                         @endif
                                     </div>
@@ -320,9 +325,10 @@
                                                 <input type="file" wire:model="berkas_spdp" id="berkas_spdp" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
                                             </div>
                                         </div>
-                                        @if($file_spdp)
+                                        @if($file_spdp['link'])
                                         <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
-                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
+                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_spdp['link'] }}','{{ $file_spdp['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
+                                            </label>
                                         </div>
                                         @endif
                                     </div>
@@ -348,9 +354,10 @@
                                                 <input type="file" wire:model="berkas_resume" id="berkas_resume" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300">
                                             </div>
                                         </div>
-                                        @if($file_resume)
+                                        @if($file_resume['link'])
                                         <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
-                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: Lihat</label>
+                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_resume['link'] }}','{{ $file_resume['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
+                                            </label>
                                         </div>
                                         @endif
                                     </div>
@@ -406,7 +413,7 @@
                                 <div class="flex">
                                     <input type="text" wire:model="barang_bukti.{{ $key }}" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                     @error('barang_bukti.{{ $key }}') <span class="error text-red-500">{{ $message }}</span> @enderror
-                                    
+
                                     <button wire:click.prevent="remove({{ $key }})" class="bg-red-700 ml-1 text-white text-xs px-4 py-2 rounded-full shadow hover:bg-red-900 outline-none focus:outline-none mr-1 mb-1" {{ count($inputs) == 1 ? 'disabled' : '' }}>Hapus</button>
 
                                 </div>
@@ -503,7 +510,7 @@
                                 <option value="">Pilih jenis kelamin...</option>
                                 <option wire-click="$jenis_kelamin='Laki-laki'" value="Laki-laki">Laki-laki</option>
                                 <option value="Perempuan">Perempuan</option>
-                            </select>                            
+                            </select>
                         </div>
 
                         <div class="col-span-6">
@@ -516,12 +523,12 @@
                                 <option value="Hindu">Hindu</option>
                                 <option value="Buddha">Buddha</option>
                                 <option value="Konghucu">Konghucu</option>
-                            </select>                            
+                            </select>
                         </div>
 
                         <div class="col-span-6">
                             <label for="pekerjaan" class="block text-sm font-medium text-gray-700">Pekerjaan</label>
-                            <input type="text" wire:model="pekerjaan" id="pekerjaan" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">                            
+                            <input type="text" wire:model="pekerjaan" id="pekerjaan" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                         </div>
 
                         <div class="col-span-6">
@@ -540,12 +547,12 @@
                             @error('alamat') <span class="error text-red-500">{{ $message }}</span> @enderror
                         </div>
                     </div>
-                </div>                
+                </div>
                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
                     <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Update
                     </button>
-                </div>                
+                </div>
             </div>
         </div>
     </div>

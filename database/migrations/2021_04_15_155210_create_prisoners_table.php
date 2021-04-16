@@ -16,6 +16,8 @@ class CreatePrisonersTable extends Migration
         Schema::create('prisoners', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
+            $table->string('email');
+            $table->string('no_hp');
             $table->string('asal_instansi');
             $table->string('no_surat');
             $table->dateTime('tgl_surat');

@@ -30,7 +30,7 @@ class Show extends Component
             ['name' => 'Surat Perintah Dimulainya Penyidikan (SPDP)', 'link' => $data->berkas_spdp],
             ['name' => 'Penetapan Penahanan Penyidik', 'link' => $data->berkas_penetapan_penahanan_penyidik],
             ['name' => 'Penetapan Perpanjangan Penahanan', 'link' => $data->berkas_penetapan_perpanjangan_penahanan],
-            ['name' => 'Berita Acara Penyitaan/Penggeledahan', 'link' => $data->berkas_berita_acara],            
+            ['name' => 'Berita Acara', 'link' => $data->berkas_berita_acara],            
             ['name' => 'Resume', 'link' => $data->berkas_resume]
         ];
         return view('livewire.prisoner.show', compact(['data', 'files']));
@@ -53,13 +53,13 @@ class Show extends Component
         DB::transaction(function () use ($status, $request_status) {
             if ($status == 'setuju') {
                 $request_status->status = 'disetujui';
-                $message = 'Permohonan nomor ' . $request_status->no_surat_permohonan . ' disetujui! Silahkan ambil dokumen ke kantor dengan membawa berkas-berkas dan e-ticket.';
+                $message = 'Permohonan nomor ' . $request_status->no_surat . ' disetujui! Silahkan ambil dokumen ke kantor dengan membawa berkas-berkas dan e-ticket.';
             } else if ($status == 'selesai') {
                 $request_status->status = 'selesai';
-                $message = 'Permohonan ' . $request_status->no_surat_permohonan . ' selesai diproses!';
+                $message = 'Permohonan ' . $request_status->no_surat . ' selesai diproses!';
             } else {
                 $request_status->status = 'ditolak';
-                $message = 'Maaf, permohonan nomor ' . $request_status->no_surat_permohonan . ' ditolak, silahkan ajukan permohonan baru';
+                $message = 'Maaf, permohonan nomor ' . $request_status->no_surat . ' ditolak, silahkan ajukan permohonan baru';
             }
 
             $notify = Notification::create([
@@ -71,6 +71,6 @@ class Show extends Component
 
         session()->flash('flash.banner', 'Permohonan berhasil diperbarui!');
         session()->flash('flash.bannerStyle', 'success');
-        return redirect(route('permohonan.index'));
+        return redirect(route('tahanan.index'));
     }
 }

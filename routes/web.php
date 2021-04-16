@@ -32,14 +32,15 @@ Route::get('/', function () {
 });
 
 Route::get('/redirect', function () {
-    if (User::findOrFail(auth()->user()->id)->hasRole('admin')) {
-        return redirect()->route('permohonan.index');
+    if (User::findOrFail(auth()->user()->id)->hasRole(['Admin','admin'])) {
+        return redirect()->route('dashboard');
     } else {
         return redirect()->route('permohonan.index');
     }
 })->name('redirect');
 
 Route::group(['middleware' => 'auth'], function () {
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     Route::group(['middleware' => ['can:Kelola User']], function () {
         Route::resource('kelola-user', AdminDashboardController::class);
         Route::resource('kelola-role', RoleController::class);

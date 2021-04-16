@@ -1,6 +1,6 @@
 <div class="flex space-x-1 justify-around">
     @if($status == 'selesai')
-    <a href="{{ route('permohonan.show', [$id]) }}" class="rounded-full border border-transparent shadow-sm text-xs font-medium rounded-md text-white bg-green-500 hover:bg-green-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500  py-2 px-2">Selesai</a>
+    <a href="{{ route('tahanan.show', [$id]) }}" class="rounded-full border border-transparent shadow-sm text-xs font-medium rounded-md text-white bg-green-500 hover:bg-green-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500  py-2 px-2">Selesai</a>
     @if(auth()->user()->hasRole(['admin','Admin']))
     <a wire:click="export_sp('{{ $id }}')" class="p-1 text-teal-600 hover:bg-teal-600 hover:text-white rounded">
         <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -9,10 +9,10 @@
     </a>
     @endif
     @elseif($status == 'ditolak')    
-    <a href="{{ route('permohonan.show', [$id]) }}" class="rounded-full border border-transparent shadow-sm text-xs font-medium rounded-md text-white bg-red-500 hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500  py-2 px-2">Ditolak</a>
+    <a href="{{ route('tahanan.show', [$id]) }}" class="rounded-full border border-transparent shadow-sm text-xs font-medium rounded-md text-white bg-red-500 hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500  py-2 px-2">Ditolak</a>
     @else
     @can('Lihat Permohonan')
-    <a href="{{ route('permohonan.show', [$id]) }}" class="p-1 text-teal-600 hover:bg-teal-600 hover:text-white rounded">
+    <a href="{{ route('tahanan.show', [$id]) }}" class="p-1 text-teal-600 hover:bg-teal-600 hover:text-white rounded">
         @can('Verifikasi Permohonan')
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -29,7 +29,7 @@
 
     @if($status == 'menunggu' && !auth()->user()->hasRole(['admin','Admin']))
     @can('Edit Permohonan')
-    <a href="{{ route('permohonan.edit', [$id]) }}" class="p-1 text-blue-600 hover:bg-blue-600 hover:text-white rounded">
+    <a href="{{ route('tahanan.edit', [$id]) }}" class="p-1 text-blue-600 hover:bg-blue-600 hover:text-white rounded">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
             <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
         </svg>

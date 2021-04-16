@@ -16,6 +16,12 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    @can('Dashboard')
+                    <x-jet-nav-link href="{{ route('dashboard') }}" :active="(request()->routeIs('dashboard')) ? true : false">
+                        {{ __('Dashboard') }}
+                    </x-jet-nav-link>
+                    @endcan
+
                     @can('Kelola Permohonan')
                     <x-jet-nav-link href="{{ route('permohonan.index') }}" :active="(request()->routeIs('permohonan.*')) ? true : false">
                         {{ __('Sita Geledah') }}
@@ -84,7 +90,7 @@
                         </x-slot>
                     </x-jet-dropdown>
                 </div>
-                @endif                
+                @endif
 
                 <!-- Settings Dropdown -->
                 <div class="ml-3 relative">

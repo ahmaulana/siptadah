@@ -60,11 +60,11 @@ class Requests extends LivewireDatatable
     }
 
     public function delete($id)
-    {
+    {                
         $request = ModelsRequest::findOrFail($id);
         if ($request->user_id == auth()->user()->id || auth()->user()->hasRole(['Admin', 'admin'])) {
-            $request->delete();
-        }
+            return $request->delete();
+        }        
     }
 
     public function export_sp($id)

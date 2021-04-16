@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Prisoner;
 
-use App\Models\EvidenceList;
 use App\Models\Prisoner;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -18,9 +17,11 @@ class Create extends Component
 
     public $suratPermohonan, $laporanPolisi, $beritaAcara, $penetapanPenahananPenyidik, $penetapanPerpanjanganPenahanan, $spPenyidikan, $spdp, $resume;
 
-    public $no_surat, $tgl_surat, $nama_tersangka, $tempat_lahir, $tgl_lahir, $jenis_kelamin, $alamat, $agama, $pekerjaan, $berkas_surat_permohonan, $berkas_laporan_polisi, $berkas_sp_penyidikan, $berkas_spdp, $berkas_penetapan_penahanan_penyidik,$berkas_penetapan_perpanjangan_penahanan, $berkas_berita_acara, $berkas_resume;
+    public $email, $no_hp, $no_surat, $tgl_surat, $nama_tersangka, $tempat_lahir, $tgl_lahir, $jenis_kelamin, $alamat, $agama, $pekerjaan, $berkas_surat_permohonan, $berkas_laporan_polisi, $berkas_sp_penyidikan, $berkas_spdp, $berkas_penetapan_penahanan_penyidik,$berkas_penetapan_perpanjangan_penahanan, $berkas_berita_acara, $berkas_resume;
 
-    protected $rules = [                
+    protected $rules = [   
+        'email' => 'required|email',
+        'no_hp' => 'required|min:9|max:13',             
         'no_surat' => 'required',
         'tgl_surat' => 'required|date',
         'nama_tersangka' => 'required',
@@ -40,7 +41,12 @@ class Create extends Component
         'berkas_resume' => 'nullable|mimes:docx,pdf,doc|max:2048',        
     ];
 
-    protected $messages = [        
+    protected $messages = [
+        'email.required' => ':attribute tidak boleh kosong!',
+        'email.email' => ':attribute tidak valid!',
+        'no_hp.required' => ':attribute tidak boleh kosong!',
+        'no_hp.min' => ':attribute tidak valid!',
+        'no_hp.max' => ':attribute tidak valid!',        
         'no_surat.required' => ':attribute tidak boleh kosong!',
         'tgl_surat.required' => 'Tanggal tidak boleh kosong!',        
         'nama_tersangka.required' => ':attribute tidak boleh kosong!',

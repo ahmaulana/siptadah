@@ -64,7 +64,13 @@ class PrisonerController extends Controller
      */
     public function edit($id)
     {
-        //
+        $request = Prisoner::findOrFail($id);        
+        if (auth()->user()->id !== 1) {
+            if ($request->user_id !== auth()->user()->id || auth()->user()->cannot('Edit Permohonan')) {
+                abort(403);
+            }
+        }
+        return view('prisoner.edit', compact(['request']));
     }
 
     /**
