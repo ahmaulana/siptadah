@@ -31,6 +31,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/register', function() {
+    return redirect('/login');
+});
+
 Route::get('/redirect', function () {
     if (User::findOrFail(auth()->user()->id)->hasRole(['Admin','admin'])) {
         return redirect()->route('dashboard');

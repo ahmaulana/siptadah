@@ -1,7 +1,8 @@
+@push('pagetitle', 'Kelola Role')
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard Admin') }}
+            {{ __('Kelola Role') }}
         </h2>
     </x-slot>
 

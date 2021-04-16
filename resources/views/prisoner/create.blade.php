@@ -1,3 +1,4 @@
+@push('pagetitle', 'Buat Perpanjangan Tahanan')
 <x-app-layout>
     <x-slot name="header">
         <a href="{{ route('tahanan.index') }}">

@@ -1,3 +1,4 @@
+@push('pagetitle', 'Buat Permohonan')
 <x-app-layout>
     <x-slot name="header">
         <a href="{{ route('permohonan.index') }}">

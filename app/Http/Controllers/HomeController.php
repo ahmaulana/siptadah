@@ -8,6 +8,13 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {    
+    public $pagetitle;
+
+    public function __construct($pagetitle='Dashboard')
+    {
+        $this->pagetitle = $pagetitle;        
+    }
+
     public function index()
     {
         if (auth()->user()->cannot('Dashboard')) {
@@ -32,7 +39,7 @@ class HomeController extends Controller
         $data['done'][0] = $siptadah_done;
         $data['done'][1] = $prisoner_done;
         $data['rejected'][0] = $siptadah_rejected;
-        $data['rejected'][1] = $prisoner_rejected;
+        $data['rejected'][1] = $prisoner_rejected;        
 
         return view('dashboard', compact(['data']));
     }
