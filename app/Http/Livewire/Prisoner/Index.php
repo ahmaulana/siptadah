@@ -15,6 +15,7 @@ class Index extends LivewireDatatable
 {
     public $model = Prisoner::class;
     public $exportable = true;
+    public $hideable = 'select';
 
     public function builder()
     {

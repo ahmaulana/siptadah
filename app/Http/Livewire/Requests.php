@@ -15,6 +15,7 @@ class Requests extends LivewireDatatable
 {
     public $model = ModelsRequest::class;
     public $exportable = true;
+    public $hideable = 'select';
 
     public function builder()
     {
@@ -34,11 +35,22 @@ class Requests extends LivewireDatatable
         }
 
         return [
-            NumberColumn::name('id'),
 
             Column::name('asal_instansi')
                 ->label('Asal Instansi')
                 ->filterable($asal_instansi)
+                ->searchable(),
+
+            Column::name('email')
+                ->label('Email')
+                ->searchable(),
+
+            Column::name('no_hp')
+                ->label('Nomor Hp')
+                ->searchable(),
+
+            Column::name('no_surat_permohonan')
+                ->label('Nomor Surat')
                 ->searchable(),
 
             Column::name('jenis_permohonan')
@@ -60,11 +72,11 @@ class Requests extends LivewireDatatable
     }
 
     public function delete($id)
-    {                
+    {
         $request = ModelsRequest::findOrFail($id);
         if ($request->user_id == auth()->user()->id || auth()->user()->hasRole(['Admin', 'admin'])) {
             return $request->delete();
-        }        
+        }
     }
 
     public function export_sp($id)
