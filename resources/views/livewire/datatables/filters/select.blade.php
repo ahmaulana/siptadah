@@ -8,13 +8,13 @@
             x-on:input="$refs.select.value=''"
         >
             <option value=""></option>
-            @foreach($options as $value => $label)
+            @foreach($options as $value => $label)            
             @if(is_object($label))
             <option value="{{ $label->id }}">{{ $label->name }}</option>
             @elseif(is_array($label))
             <option value="{{ $label['id'] }}">{{ $label['name'] }}</option>
             @elseif(is_numeric($value))
-            <option value="{{ $label }}">{{ $label }}</option>
+            <option value="{{ $value }}">{{ $label }}</option>
             @else
             <option value="{{ $value }}">{{ $label }}</option>
             @endif

@@ -4,14 +4,11 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\User\DashboardController as UserDashboardController;
-use App\Http\Controllers\User\RequestController;
+use App\Http\Controllers\SiptadahController;
 use App\Http\Controllers\PrisonerController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use PhpOffice\PhpWord\Template;
-use PhpOffice\PhpWord\TemplateProcessor;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,15 +28,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/register', function() {
-    return redirect('/login');
-});
-
 Route::get('/redirect', function () {
-    if (User::findOrFail(auth()->user()->id)->hasRole(['Admin','admin'])) {
+    if (User::findOrFail(auth()->user()->id)->hasRole(['Admin', 'admin'])) {
         return redirect()->route('dashboard');
     } else {
-        return redirect()->route('permohonan.index');
+        return redirect()->route('siptadah.index');
     }
 })->name('redirect');
 
@@ -51,9 +44,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('kelola-permission', PermissionController::class);
     });
 
-    Route::group(['middleware' => ['can:Kelola Permohonan']], function () {
-        Route::resource('permohonan', RequestController::class);        
+    Route::group(['middleware' => ['role_or_permission:Admin|Input Siptadah']], function () {
+        Route::resource('siptadah', SiptadahController::class);
     });
 
-    Route::resource('tahanan', PrisonerController::class);    
+    Route::group(['middleware' => ['role_or_permission:Admin|Input Tahanan']], function () {
+        Route::resource('tahanan', PrisonerController::class);
+    });
 });

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Livewire\Prisoner;
+namespace App\Http\Livewire\Siptadah;
 
 use App\Models\Notification;
-use App\Models\Prisoner;
+use App\Models\Request;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -14,26 +14,27 @@ class Show extends Component
 
     public function render()
     {        
-        $this->request_data = Prisoner::findOrFail($this->request);
+        $this->request_data = Request::findOrFail($this->request);
         $data = $this->request_data;
-        if (auth()->user()->can('Verifikasi Tahanan')) {            
-            if ($data->status == '0') {
+        if (auth()->user()->can('Verifikasi Siptadah')) {                        
+            if ($data->status == '0') {                
                 $data->status = '1';
                 $data->save();
             }
         }
-        
+
+        $barang_bukti = $data->evidence_lists;
         $files = [
             ['name' => 'Surat Permohonan', 'link' => $data->berkas_surat_permohonan],
             ['name' => 'Laporan Polisi', 'link' => $data->berkas_laporan_polisi],
+            ['name' => 'Surat Perintah Penyitaan/Penggeledahan', 'link' => $data->berkas_sp_pp],
+            ['name' => 'Berita Acara Penyitaan/Penggeledahan', 'link' => $data->berkas_berita_acara],
+            ['name' => 'Surat Tanda Penerimaan', 'link' => $data->berkas_surat_penerimaan],
             ['name' => 'Surat Perintah Penyidikan', 'link' => $data->berkas_sp_penyidikan],
             ['name' => 'Surat Perintah Dimulainya Penyidikan (SPDP)', 'link' => $data->berkas_spdp],
-            ['name' => 'Penetapan Penahanan Penyidik', 'link' => $data->berkas_penetapan_penahanan_penyidik],
-            ['name' => 'Penetapan Perpanjangan Penahanan', 'link' => $data->berkas_penetapan_perpanjangan_penahanan],
-            ['name' => 'Berita Acara', 'link' => $data->berkas_berita_acara],            
             ['name' => 'Resume', 'link' => $data->berkas_resume]
         ];
-        return view('livewire.prisoner.show', compact(['data', 'files']));
+        return view('livewire.siptadah.show', compact(['data', 'files', 'barang_bukti']));
     }
 
     public function download($file, $name)
@@ -45,7 +46,7 @@ class Show extends Component
 
     public function verify($status)
     {        
-        if (auth()->user()->cannot('Verifikasi Tahanan')) {
+        if (auth()->user()->cannot('Verifikasi Siptadah')) {
             abort(403);
         }
 
@@ -53,13 +54,13 @@ class Show extends Component
         DB::transaction(function () use ($status, $request_status) {
             if ($status == 'setuju') {
                 $request_status->status = '2';
-                $message = 'Permohonan nomor ' . $request_status->no_surat . ' disetujui! Silahkan ambil dokumen ke kantor dengan membawa berkas-berkas dan e-ticket.';
+                $message = 'Permohonan nomor ' . $request_status->no_surat_permohonan . ' disetujui! Silahkan ambil dokumen ke kantor dengan membawa berkas-berkas dan e-ticket.';
             } else if ($status == 'selesai') {
                 $request_status->status = '4';
-                $message = 'Permohonan ' . $request_status->no_surat . ' selesai diproses!';
+                $message = 'Permohonan ' . $request_status->no_surat_permohonan . ' selesai diproses!';
             } else {
                 $request_status->status = '3';
-                $message = 'Maaf, permohonan nomor ' . $request_status->no_surat . ' ditolak, silahkan ajukan permohonan baru';
+                $message = 'Maaf, permohonan nomor ' . $request_status->no_surat_permohonan . ' ditolak, silahkan ajukan permohonan baru';
             }
 
             $notify = Notification::create([
@@ -71,6 +72,6 @@ class Show extends Component
 
         session()->flash('flash.banner', 'Permohonan berhasil diperbarui!');
         session()->flash('flash.bannerStyle', 'success');
-        return redirect(route('tahanan.index'));
+        return redirect(route('siptadah.index'));
     }
 }

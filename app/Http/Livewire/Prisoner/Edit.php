@@ -128,7 +128,7 @@ class Edit extends Component
 
     public function update()
     {
-        if (auth()->user()->cannot('Edit Permohonan')) {
+        if (auth()->user()->cannot('Edit Tahanan')) {
             abort(403);
         }
 

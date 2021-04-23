@@ -16,21 +16,23 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    @can('Dashboard')
+                    @can('Kelola Dashboard')
                     <x-jet-nav-link href="{{ route('dashboard') }}" :active="(request()->routeIs('dashboard')) ? true : false">
                         {{ __('Dashboard') }}
                     </x-jet-nav-link>
                     @endcan
 
-                    @can('Kelola Permohonan')
-                    <x-jet-nav-link href="{{ route('permohonan.index') }}" :active="(request()->routeIs('permohonan.*')) ? true : false">
+                    @if(auth()->user()->can(['Input Siptadah']) || auth()->user()->can(['Verifikasi Siptadah']))
+                    <x-jet-nav-link href="{{ route('siptadah.index') }}" :active="(request()->routeIs('siptadah.*')) ? true : false">
                         {{ __('Sita Geledah') }}
                     </x-jet-nav-link>
-                    @endcan
+                    @endif
 
+                    @if(auth()->user()->can(['Input Tahanan']) || auth()->user()->can(['Verifikasi Tahanan']))
                     <x-jet-nav-link href="{{ route('tahanan.index') }}" :active="(request()->routeIs('tahanan.*')) ? true : false">
-                        {{ __('Tahanan') }}
+                        {{ __('Perpanjangan Tahanan') }}
                     </x-jet-nav-link>
+                    @endif
 
                     @can('Kelola User')
                     <x-jet-nav-link href="{{ route('kelola-user.index') }}" :active="(request()->routeIs('kelola-user.*') || request()->routeIs('kelola-role.*') || request()->routeIs('kelola-permission.*')) ? true : false">

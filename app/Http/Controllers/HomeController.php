@@ -17,20 +17,20 @@ class HomeController extends Controller
 
     public function index()
     {
-        if (auth()->user()->cannot('Dashboard')) {
+        if (auth()->user()->cannot('Kelola Dashboard')) {
             abort(403);
         }
         //Siptadah
-        $siptadah_new = ModelsRequest::where('status', 'menunggu')->count();
-        $siptadah_processed = ModelsRequest::where('status', 'sedang diproses')->count();
-        $siptadah_done = ModelsRequest::where('status', 'selesai')->count();
-        $siptadah_rejected = ModelsRequest::where('status', 'ditolak')->count();
+        $siptadah_new = ModelsRequest::where('status', '0')->count();        
+        $siptadah_processed = ModelsRequest::where('status', '1')->orWhere('status','2')->count();
+        $siptadah_done = ModelsRequest::where('status', '3')->count();
+        $siptadah_rejected = ModelsRequest::where('status', '4')->count();
 
         //Prisoner
-        $prisoner_new = Prisoner::where('status', 'menunggu')->count();
-        $prisoner_processed = Prisoner::where('status', 'sedang diproses')->count();
-        $prisoner_done = Prisoner::where('status', 'selesai')->count();
-        $prisoner_rejected = Prisoner::where('status', 'ditolak')->count();
+        $prisoner_new = Prisoner::where('status', '0')->count();
+        $prisoner_processed = Prisoner::where('status', '1')->orWhere('status','2')->count();
+        $prisoner_done = Prisoner::where('status', '3')->count();
+        $prisoner_rejected = Prisoner::where('status', '4')->count();
 
         $data['new'][0] = $siptadah_new;
         $data['new'][1] = $prisoner_new;

@@ -4,7 +4,6 @@ namespace App\Http\Livewire\Prisoner;
 
 use App\Models\Prisoner;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -87,7 +86,7 @@ class Create extends Component
 
     public function render()
     {      
-        if(!User::findOrFail(auth()->user()->id)->hasPermissionTo('Input Permohonan')){
+        if(!User::findOrFail(auth()->user()->id)->hasPermissionTo('Input Tahanan')){
             abort(403);
         }
         return view('livewire.prisoner.create');

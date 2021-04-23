@@ -42,7 +42,7 @@ class CreateRequestsTable extends Migration
             $table->text('alamat');
             $table->string('agama');
             $table->string('pekerjaan');
-            $table->enum('status',['menunggu','sedang diproses', 'disetujui', 'ditolak', 'selesai'])->default('menunggu');
+            $table->enum('status',[0, 1, 2, 3, 4])->default(0)->comment('0:menunggu, 1:sedang diproses, 2:disetujui, 3:ditolak, 4:selesai');
             $table->timestamps();
         });
     }

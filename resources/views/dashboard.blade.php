@@ -10,7 +10,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="flex space-x-2">
                 <div class="font-bold text-xl">Sita Geledah</div>
-                <a href="{{ route('permohonan.index') }}" class="rounded-full px-2 bg-indigo-600 text-xs text-white p-1 rounded  leading-none flex items-center">
+                <a href="{{ route('siptadah.index') }}" class="rounded-full px-2 bg-indigo-600 text-xs text-white p-1 rounded  leading-none flex items-center">
                     Detail
                 </a>
             </div>

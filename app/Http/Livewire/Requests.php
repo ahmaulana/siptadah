@@ -34,28 +34,28 @@ class Requests extends LivewireDatatable
             $asal_instansi[] = $role->name;
         }
 
-        return [
-
-            Column::name('asal_instansi')
-                ->label('Asal Instansi')
-                ->filterable($asal_instansi)
-                ->searchable(),
-
-            Column::name('email')
-                ->label('Email')
-                ->searchable(),
-
-            Column::name('no_hp')
-                ->label('Nomor Hp')
-                ->searchable(),
+        $columns = [            
 
             Column::name('no_surat_permohonan')
                 ->label('Nomor Surat')
                 ->searchable(),
 
+            Column::name('email')
+                ->label('Email')
+                ->hide(),
+
+            Column::name('no_hp')
+                ->label('Nomor Hp')
+                ->hide(),
+
+
             Column::name('jenis_permohonan')
                 ->label('Jenis Permohonan')
                 ->filterable(['penyitaan', 'penggeledahan']),
+
+            Column::name('pasal')
+                ->label('Pasal')
+                ->hide(),
 
             Column::name('status')
                 ->label('Status')
@@ -69,6 +69,18 @@ class Requests extends LivewireDatatable
             })
                 ->label('Aksi')->alignCenter(),
         ];
+
+        if(auth()->user()->hasRole(['admin', 'Admin'])){
+            $first_column = [
+                Column::name('asal_instansi')
+                ->label('Instansi')
+                ->filterable($asal_instansi)
+                ->searchable(),
+            ];
+            $columns = array_merge($first_column, $columns);
+        }
+
+        return $columns;
     }
 
     public function delete($id)

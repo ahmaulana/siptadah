@@ -1,28 +1,27 @@
 <?php
 
-namespace App\Http\Livewire\Prisoner;
+namespace App\Http\Livewire\Siptadah;
 
-use App\Models\Prisoner;
+use App\Models\Request as ModelsRequest;
 use Carbon\Carbon;
 use Mediconesystems\LivewireDatatables\Column;
 use Mediconesystems\LivewireDatatables\DateColumn;
-use Mediconesystems\LivewireDatatables\NumberColumn;
 use Mediconesystems\LivewireDatatables\Http\Livewire\LivewireDatatable;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Spatie\Permission\Models\Role;
 
 class Index extends LivewireDatatable
 {
-    public $model = Prisoner::class;
+    public $model = ModelsRequest::class;
     public $exportable = true;
     public $hideable = 'select';
 
     public function builder()
     {
         if (auth()->user()->id == 1) {
-            return Prisoner::query();
+            return ModelsRequest::query();
         }
-        return Prisoner::query()
+        return ModelsRequest::query()
             ->where('user_id', auth()->user()->id);
     }
 
@@ -31,12 +30,12 @@ class Index extends LivewireDatatable
         $roles = Role::select('name')->get();
         $asal_instansi = [];
         foreach ($roles as $role) {
-            $asal_instansi[] = $role->name;
+            $asal_instansi[$role->name] = $role->name;
         }
 
         $columns = [
 
-            Column::name('no_surat')
+            Column::name('no_surat_permohonan')
                 ->label('Nomor Surat')
                 ->searchable(),
 
@@ -48,32 +47,13 @@ class Index extends LivewireDatatable
                 ->label('Nomor Hp')
                 ->hide(),
 
-            Column::name('nama_tersangka')
-                ->label('Nama Tersangka')
-                ->searchable(),
 
-            Column::name('tempat_lahir')
-                ->label('Tempat Lahir')
-                ->hide(),
+            Column::name('jenis_permohonan')
+                ->label('Jenis Permohonan')
+                ->filterable(['penyitaan' => 'penyitaan', 'penggeledahan' => 'penggeledahan']),
 
-            Column::name('tgl_lahir')
-                ->label('Tanggal Lahir')
-                ->hide(),
-
-            Column::name('jenis_kelamin')
-                ->label('Jenis Kelamin')
-                ->hide(),
-
-            Column::name('agama')
-                ->label('Agama')
-                ->hide(),
-
-            Column::name('pekerjaan')
-                ->label('Pekerjaan')
-                ->hide(),
-
-            Column::name('alamat')
-                ->label('Alamat')
+            Column::name('pasal')
+                ->label('Pasal')
                 ->hide(),
 
             Column::callback('status', function ($status) {
@@ -105,15 +85,17 @@ class Index extends LivewireDatatable
                 ->label('Dibuat'),
 
             Column::callback(['id', 'status'], function ($id, $status) {
-                return view('prisoner-table-actions', ['id' => $id, 'status' => $status]);
+                return view('siptadah-table-actions', ['id' => $id, 'status' => $status]);
             })
-                ->label('Aksi')->alignCenter(),
+                ->label('Aksi')
+                ->alignCenter(),
         ];
 
         if (auth()->user()->hasRole(['admin', 'Admin'])) {
             $first_column = [
                 Column::name('asal_instansi')
                     ->label('Instansi')
+                    ->filterable($asal_instansi)
                     ->searchable(),
             ];
             $columns = array_merge($first_column, $columns);
@@ -122,61 +104,82 @@ class Index extends LivewireDatatable
         return $columns;
     }
 
+    public function delete($id)
+    {
+        $request = ModelsRequest::findOrFail($id);
+        if ($request->user_id == auth()->user()->id || auth()->user()->hasRole(['Admin', 'admin'])) {
+            return $request->delete();
+        }
+    }
+
     public function export_sp($id)
     {
-        $request = Prisoner::findOrFail($id);
-        $evidence_lists = Prisoner::findOrFail($id)->evidence_lists;
-        $surat = new TemplateProcessor(storage_path('app/template/prisoner.docx'));
+        $request = ModelsRequest::findOrFail($id);
+        $evidence_lists = ModelsRequest::findOrFail($id)->evidence_lists;
+        $surat = new TemplateProcessor(storage_path('app/template/' . $request->jenis_permohonan . '.docx'));
         $surat->setValues([
-            'no_surat' => $request->no_surat,
-            'tgl_surat' => Carbon::parse($request->tgl_surat)->isoFormat('D MMMM Y'),
+            'no_surat_permohonan' => $request->no_surat_permohonan,
+            'tgl_surat_permohonan' => Carbon::parse($request->tgl_surat_permohonan)->isoFormat('D MMMM Y'),
+            'pasal' => $request->pasal,
             'nama_tersangka' => ucfirst($request->nama_tersangka),
             'tempat_lahir' => $request->tempat_lahir,
             'umur' => Carbon::parse($request->tgl_lahir)->age,
             'tgl_lahir' => Carbon::parse($request->tgl_lahir)->isoFormat('D MMMM Y'),
             'jenis_kelamin' => $request->jenis_kelamin,
+            'kebangsaan' => $request->kebangsaan,
             'alamat' => $request->alamat,
             'agama' => $request->agama,
             'pekerjaan' => $request->pekerjaan,
             'tgl_sekarang' => Carbon::now()->isoFormat('D MMMM Y'),
         ]);
 
-        $file_name = 'Perpanjangan Tahanan ' . ucfirst($request->jenis_permohonan) . ' ' . $request->no_surat . '.docx';
+        $surat->cloneBlock('list_barang_bukti', count($evidence_lists), true, true);
+        $no = 1;
+        foreach ($evidence_lists as $key => $evidence_list) {
+            $surat->setValue('barang_bukti#' . $no, $evidence_list->barang_bukti);
+            $no++;
+        }
+
+        $file_name = 'Surat ' . ucfirst($request->jenis_permohonan) . ' ' . $request->no_surat_permohonan . '.docx';
         $surat->saveAs($file_name);
         return response()->download(public_path($file_name))->deleteFileAfterSend();
     }
 
     public function export_ticket($id)
     {
-        $request = Prisoner::findOrFail($id);
+        $request = ModelsRequest::findOrFail($id);
 
-        $ticket = new TemplateProcessor(storage_path('app/template/e-ticket-prisoner.docx'));
+        $evidence_lists = ModelsRequest::findOrFail($id)->evidence_lists;
+
+        $ticket = new TemplateProcessor(storage_path('app/template/e-ticket-siptadah.docx'));
         $ticket->setValues([
             'id' => $request->id,
             'asal_instansi' => $request->asal_instansi,
             'email' => $request->email,
             'no_hp' => $request->no_hp,
-            'no_surat' => $request->no_surat,
-            'tgl_surat' => Carbon::parse($request->tgl_surat)->isoFormat('D MMMM Y'),
+            'no_surat_permohonan' => $request->no_surat_permohonan,
+            'tgl_surat_permohonan' => Carbon::parse($request->tgl_surat_permohonan)->isoFormat('D MMMM Y'),
+            'jenis_permohonan' => ucfirst($request->jenis_permohonan),
+            'penyitaan_penggeledahan' => $request->penyitaan_penggeledahan,
+            'tgl_sita_geledah' => Carbon::parse($request->tgl_sita_geledah)->isoFormat('D MMMM Y'),
+            'pasal' => $request->pasal,
+            'sumber' => $request->sumber,
             'nama_tersangka' => ucfirst($request->nama_tersangka),
             'tempat_lahir' => $request->tempat_lahir,
             'tgl_lahir' => Carbon::parse($request->tgl_lahir)->isoFormat('D MMMM Y'),
             'umur' => Carbon::parse($request->tgl_lahir)->age,
-            'jenis_kelamin' => $request->jenis_kelamin,
             'alamat' => $request->alamat,
-            'agama' => $request->agama,
-            'pekerjaan' => $request->pekerjaan,
             'tgl_sekarang' => Carbon::now()->isoFormat('D MMMM Y'),
         ]);
 
         $files = [
             ['name' => 'Surat Permohonan', 'link' => $request->berkas_surat_permohonan],
             ['name' => 'Laporan Polisi', 'link' => $request->berkas_laporan_polisi],
+            ['name' => 'Surat Perintah Penyitaan/Penggeledahan', 'link' => $request->berkas_sp_pp],
+            ['name' => 'Berita Acara Penyitaan/Penggeledahan', 'link' => $request->berkas_berita_acara],
+            ['name' => 'Surat Tanda Penerimaan', 'link' => $request->berkas_surat_penerimaan],
             ['name' => 'Surat Perintah Penyidikan', 'link' => $request->berkas_sp_penyidikan],
             ['name' => 'Surat Perintah Dimulainya Penyidikan (SPDP)', 'link' => $request->berkas_spdp],
-            ['name' => 'Penetapan Penahanan Penyidik', 'link' => $request->berkas_penetapan_penahanan_penyidik],
-            ['name' => 'Penetapan Perpanjangan Penahanan', 'link' => $request->berkas_penetapan_perpanjangan_penahanan],
-            ['name' => 'Berita Acara', 'link' => $request->berkas_berita_acara],
             ['name' => 'Resume', 'link' => $request->berkas_resume]
         ];
 
@@ -198,16 +201,15 @@ class Index extends LivewireDatatable
             $no++;
         }
 
-        $file_name = 'E-ticket ' . $request->no_surat . '.docx';
+        $ticket->cloneBlock('list_barang_bukti', count($evidence_lists), true, true);
+        $no = 1;
+        foreach ($evidence_lists as $key => $evidence_list) {
+            $ticket->setValue('barang_bukti#' . $no, $evidence_list->barang_bukti);
+            $no++;
+        }
+
+        $file_name = 'E-ticket ' . $request->no_surat_permohonan . '.docx';
         $ticket->saveAs($file_name);
         return response()->download(public_path($file_name))->deleteFileAfterSend();
-    }
-
-    public function delete($id)
-    {
-        $request = Prisoner::findOrFail($id);
-        if ($request->user_id == auth()->user()->id || auth()->user()->hasRole(['Admin', 'admin'])) {
-            $request->delete();
-        }
     }
 }

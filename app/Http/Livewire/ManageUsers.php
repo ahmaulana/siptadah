@@ -87,7 +87,7 @@ class ManageUsers extends Component
 
         $this->user_id = $id;
         $this->name = $user->name;
-        $this->email = $user->email;
+        $this->email = $user->email;        
 
         $this->role_id = isset($user->roles->first()->id) ? $user->roles->first()->id : '';
         $this->openModal('add');
@@ -118,8 +118,8 @@ class ManageUsers extends Component
     public function submit()
     {
         if ($this->edit) {
-            $this->password = '123456789';
-            $this->password_confirmation = '123456789';
+            $this->password = '12345678';
+            $this->password_confirmation = '12345678';
         }
         //Validasi input     
         $data = $this->validate();
@@ -133,6 +133,7 @@ class ManageUsers extends Component
             $user = User::where('id', $this->user_id)->update([
                 'name' => $data['name'],
                 'email' => $data['email'],
+                'password' => Hash::make($data['password']),
             ]);
         }
 

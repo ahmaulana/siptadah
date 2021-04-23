@@ -49,7 +49,7 @@ class PrisonerController extends Controller
         $request_id = $id;
         $request = Prisoner::findOrFail($id);
         if (auth()->user()->id !== 1) {
-            if ($request->user_id !== auth()->user()->id || auth()->user()->cannot('Edit Permohonan')) {
+            if ($request->user_id !== auth()->user()->id || auth()->user()->cannot('Edit Tahanan')) {
                 abort(403);
             }
         }
@@ -66,7 +66,7 @@ class PrisonerController extends Controller
     {
         $request = Prisoner::findOrFail($id);        
         if (auth()->user()->id !== 1) {
-            if ($request->user_id !== auth()->user()->id || auth()->user()->cannot('Edit Permohonan')) {
+            if ($request->user_id !== auth()->user()->id || auth()->user()->cannot('Edit Tahanan')) {
                 abort(403);
             }
         }

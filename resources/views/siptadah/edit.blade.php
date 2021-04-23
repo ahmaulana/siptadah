@@ -1,7 +1,7 @@
-@push('pagetitle', 'Edit Perpanjangan Tahanan')
+@push('pagetitle', 'Edit Permohonan')
 <x-app-layout>
     <x-slot name="header">
-        <a href="{{ route('tahanan.index') }}">
+        <a href="{{ route('siptadah.index') }}">
             <svg class="mb-1 block h-5 w-auto inline" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 492 492" style="enable-background:new 0 0 492 492;" xml:space="preserve">
                 <path d="M464.344,207.418l0.768,0.168H135.888l103.496-103.724c5.068-5.064,7.848-11.924,7.848-19.124
 			c0-7.2-2.78-14.012-7.848-19.088L223.28,49.538c-5.064-5.064-11.812-7.864-19.008-7.864c-7.2,0-13.952,2.78-19.016,7.844
@@ -18,7 +18,7 @@
 
     <div class="py-5">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            @livewire('prisoner.edit', ['request' => $request])            
+            @livewire('siptadah.edit', ['request' => $request, 'evidence' => $evidence])            
         </div>
     </div>
 </x-app-layout>
