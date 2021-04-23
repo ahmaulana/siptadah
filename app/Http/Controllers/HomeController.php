@@ -23,14 +23,14 @@ class HomeController extends Controller
         //Siptadah
         $siptadah_new = ModelsRequest::where('status', '0')->count();        
         $siptadah_processed = ModelsRequest::where('status', '1')->orWhere('status','2')->count();
-        $siptadah_done = ModelsRequest::where('status', '3')->count();
-        $siptadah_rejected = ModelsRequest::where('status', '4')->count();
+        $siptadah_rejected = ModelsRequest::where('status', '3')->count();
+        $siptadah_done = ModelsRequest::where('status', '4')->count();
 
         //Prisoner
         $prisoner_new = Prisoner::where('status', '0')->count();
         $prisoner_processed = Prisoner::where('status', '1')->orWhere('status','2')->count();
-        $prisoner_done = Prisoner::where('status', '3')->count();
-        $prisoner_rejected = Prisoner::where('status', '4')->count();
+        $prisoner_rejected = Prisoner::where('status', '3')->count();
+        $prisoner_done = Prisoner::where('status', '4')->count();
 
         $data['new'][0] = $siptadah_new;
         $data['new'][1] = $prisoner_new;

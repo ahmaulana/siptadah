@@ -102,7 +102,7 @@ class Create extends Component
         if(!User::findOrFail(auth()->user()->id)->hasPermissionTo('Input Siptadah')){
             abort(403);
         }
-        return view('livewire.request-form');
+        return view('livewire.siptadah.create');
     }
 
     public function add($i)
