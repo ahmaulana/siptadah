@@ -198,6 +198,9 @@ class Index extends LivewireDatatable
             $no++;
         }
 
+        #Remove Special Character
+        $request->no_surat = str_replace(["/", "\\"], ".", $request->no_surat);
+
         $file_name = 'E-ticket ' . $request->no_surat . '.docx';
         $ticket->saveAs($file_name);
         return response()->download(public_path($file_name))->deleteFileAfterSend();
