@@ -14,7 +14,7 @@
                     <div class="px-4 sm:px-0">
                         <h3 class="text-lg font-medium leading-6 text-gray-900">Data Permohonan</h3>
                         <p class="mt-1 text-sm text-gray-600">
-                            Deskripsi singkat...
+                            
                         </p>
                     </div>
                 </div>
@@ -122,7 +122,7 @@
                     <div class="px-4 sm:px-0">
                         <h3 class="text-lg font-medium leading-6 text-gray-900">Berkas-Berkas</h3>
                         <p class="mt-1 text-sm text-gray-600">
-                            Deskripsi singkat...
+                            
                         </p>
                     </div>
                 </div>
@@ -308,7 +308,7 @@
                     <div class="px-4 sm:px-0">
                         <h3 class="text-lg font-medium leading-6 text-gray-900">Pasal & Bukti</h3>
                         <p class="mt-1 text-sm text-gray-600">
-                            Deskripsi singkat...
+                            
                         </p>
                     </div>
                 </div>
@@ -376,7 +376,7 @@
                     <div class="px-4 sm:px-0">
                         <h3 class="text-lg font-medium leading-6 text-gray-900">Identitas Tersangka/Terlapor</h3>
                         <p class="mt-1 text-sm text-gray-600">
-                            Deskripsi singkat...
+                            
                         </p>
                     </div>
                 </div>

@@ -8,7 +8,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <html>
 
 <head>
-    <title>SIPTADAH | Pengadilan Negeri Kendal</title>
+    <title>SIPTADAHAN | Pengadilan Negeri Kendal</title>
     <link rel="shortcut icon" href="ma.png">
     <!--/tags -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,7 +21,6 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     <!-- //for bootstrap working -->
     <link href="//fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800" rel="stylesheet">
     <link href='//fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,900,900italic,700italic' rel='stylesheet' type='text/css'>
-
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('img/apple-touch-icon.png') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon-32x32.png') }}">
@@ -29,8 +28,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     <link rel="manifest" href="{{ asset('img/site.webmanifest') }}">
     <link rel="mask-icon" href="{{ asset('img/safari-pinned-tab.svg') }}" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
-
+    <meta name="theme-color" content="#ffffff"
 </head>
 
 <body>
@@ -60,11 +58,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             <!-- header-bot -->
             <div class="col-md-4 logo_agile">
                 <h1><a href="index.html">
-                        <font size="10"><span>SIP</span>TADAH <i class="" aria-hidden="true"></i></font>
+                        <font size="10"><span>SIP</span>TADAHAN <i class="" aria-hidden="true"></i></font>
                     </a></h1>
                 <br>
                 <p>
-                    <font face="Century Gothic" size="4">Sistem Informasi Permohonan / Perijinan Sita Geledah
+                    <font face="Century Gothic" size="4">Sistem Informasi Permohonan / Perijinan Sita Geledah dan Perpanjangan Tahanan
                 </p>
                 </font>
             </div>
@@ -129,10 +127,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         <div class="container">
             <div class="banner_bottom_agile_info_inner_w3ls">
 
-                <h3 class="wthree_text_info">SIP<span>TADAH</span></h3>
+                <h3 class="wthree_text_info">SIP<span>TADAHAN</span></h3>
                 <p align="justify">
                     <font size="4">
-                        <center> SIPTADAH (Sistem Informasi Permohonan/Perijinan Sita Geledah dibuat untuk mempermudah dan mempercepat proses permohonan Penetapan Ketua Pengadilan Negeri Kendal terkait "Persetujuan dan/atau Izin Sita - Geledah".
+                        <center> SIPTADAHAN (Sistem Informasi Permohonan/Perijinan Sita Geledah dan Perpanjangan Tahanan dibuat untuk mempermudah dan mempercepat proses permohonan Penetapan Ketua Pengadilan Negeri Kendal terkait "Persetujuan atau Izin Sita - Geledah dan Perpanjangan Tahanan".
                             <br>
                             <br>
                             <b><i>"Diharapkan saudara dapat mengisi formulir online ini untuk data acuan kelengkapan berkas saudara sebelum mengajukan permohonan. Atas perhatian Bapak/Ibu kami sampaikan terimakasih"</i>
