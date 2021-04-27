@@ -17,7 +17,7 @@ class CreateRequestsTable extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->string('asal_instansi');
-            $table->string('email');
+            $table->string('nama_pemohon');
             $table->string('no_hp');
             $table->string('no_surat_permohonan');
             $table->dateTime('tgl_surat_permohonan');

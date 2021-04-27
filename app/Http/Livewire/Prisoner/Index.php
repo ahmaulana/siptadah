@@ -40,8 +40,8 @@ class Index extends LivewireDatatable
                 ->label('Nomor Surat')
                 ->searchable(),
 
-            Column::name('email')
-                ->label('Email')
+            Column::name('nama_pemohon')
+                ->label('Nama Pemohon')
                 ->hide(),
 
             Column::name('no_hp')
@@ -157,7 +157,7 @@ class Index extends LivewireDatatable
         $ticket->setValues([
             'id' => $request->id,
             'asal_instansi' => $request->asal_instansi,
-            'email' => $request->email,
+            'nama_pemohon' => $request->nama_pemohon,
             'no_hp' => $request->no_hp,
             'no_surat' => $request->no_surat,
             'tgl_surat' => Carbon::parse($request->tgl_surat)->isoFormat('D MMMM Y'),

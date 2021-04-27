@@ -24,9 +24,9 @@
                             <div class="grid grid-cols-6 gap-6">
 
                                 <div class="col-span-6 sm:col-span-3">
-                                    <label for="email" class="block text-sm font-medium text-gray-700">Email Aktif (Untuk Verifikasi Lanjutan)</label>
-                                    <input type="text" wire:model="email" id="email" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                    @error('email') <span class="error text-red-500">{{ $message }}</span> @enderror
+                                    <label for="nama_pemohon" class="block text-sm font-medium text-gray-700">Nama Pemohon</label>
+                                    <input type="text" wire:model="nama_pemohon" id="nama_pemohon" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    @error('nama_pemohon') <span class="error text-red-500">{{ $message }}</span> @enderror
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
@@ -150,7 +150,7 @@
                                         </div>
                                         @if($file_surat_permohonan['link'])
                                         <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
-                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini:
+                                            <label class="text-sm font-medium text-gray-700">Berkas saat ini:
                                                 <a wire:click="download('{{ $file_surat_permohonan['link'] }}','{{ $file_surat_permohonan['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">
                                                     Lihat
                                                 </a>
@@ -182,7 +182,7 @@
                                         </div>
                                         @if($file_laporan_polisi['link'])
                                         <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
-                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_laporan_polisi['link'] }}','{{ $file_laporan_polisi['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
+                                            <label class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_laporan_polisi['link'] }}','{{ $file_laporan_polisi['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
                                             </label>
                                         </div>
                                         @endif
@@ -211,7 +211,7 @@
                                         </div>
                                         @if($file_sp_pp['link'])
                                         <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
-                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_sp_pp['link'] }}','{{ $file_sp_pp['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
+                                            <label class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_sp_pp['link'] }}','{{ $file_sp_pp['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
                                             </label>
                                         </div>
                                         @endif
@@ -240,7 +240,7 @@
                                         </div>
                                         @if($file_berita_acara['link'])
                                         <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
-                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_berita_acara['link'] }}','{{ $file_berita_acara['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
+                                            <label class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_berita_acara['link'] }}','{{ $file_berita_acara['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
                                             </label>
                                         </div>
                                         @endif
@@ -269,7 +269,7 @@
                                         </div>
                                         @if($file_surat_penerimaan['link'])
                                         <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
-                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_surat_penerimaan['link'] }}','{{ $file_surat_penerimaan['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
+                                            <label class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_surat_penerimaan['link'] }}','{{ $file_surat_penerimaan['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
                                             </label>
                                         </div>
                                         @endif
@@ -298,7 +298,7 @@
                                         </div>
                                         @if($file_sp_penyidikan['link'])
                                         <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
-                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_sp_penyidikan['link'] }}','{{ $file_sp_penyidikan['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
+                                            <label class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_sp_penyidikan['link'] }}','{{ $file_sp_penyidikan['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
                                             </label>
                                         </div>
                                         @endif
@@ -327,7 +327,7 @@
                                         </div>
                                         @if($file_spdp['link'])
                                         <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
-                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_spdp['link'] }}','{{ $file_spdp['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
+                                            <label class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_spdp['link'] }}','{{ $file_spdp['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
                                             </label>
                                         </div>
                                         @endif
@@ -356,7 +356,7 @@
                                         </div>
                                         @if($file_resume['link'])
                                         <div class="mt-1 ml-1 col-span-6 sm:col-span-3">
-                                            <label for="email" class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_resume['link'] }}','{{ $file_resume['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
+                                            <label class="text-sm font-medium text-gray-700">Berkas saat ini: <a wire:click="download('{{ $file_resume['link'] }}','{{ $file_resume['name'] }}')" class="font-medium text-indigo-600 hover:text-indigo-500">Lihat</a>
                                             </label>
                                         </div>
                                         @endif

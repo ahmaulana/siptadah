@@ -18,10 +18,10 @@ class Create extends Component
 
     public $suratPermohonan, $laporanPolisi, $sppp, $beritaAcara, $suratPenerimaan, $spPenyidikan, $spdp, $resume;
 
-    public $email, $no_hp, $no_surat_permohonan, $tgl_surat_permohonan, $jenis_permohonan, $penyitaan_penggeledahan, $tgl_sita_geledah, $berkas_surat_permohonan, $berkas_laporan_polisi, $berkas_sp_pp, $berkas_berita_acara, $berkas_surat_penerimaan, $berkas_sp_penyidikan, $berkas_spdp, $berkas_resume, $pasal, $barang_bukti, $sumber, $nama_tersangka, $tempat_lahir, $tgl_lahir, $jenis_kelamin, $kebangsaan = 'Indonesia', $alamat, $agama, $pekerjaan;
+    public $nama_pemohon, $no_hp, $no_surat_permohonan, $tgl_surat_permohonan, $jenis_permohonan, $penyitaan_penggeledahan, $tgl_sita_geledah, $berkas_surat_permohonan, $berkas_laporan_polisi, $berkas_sp_pp, $berkas_berita_acara, $berkas_surat_penerimaan, $berkas_sp_penyidikan, $berkas_spdp, $berkas_resume, $pasal, $barang_bukti, $sumber, $nama_tersangka, $tempat_lahir, $tgl_lahir, $jenis_kelamin, $kebangsaan = 'Indonesia', $alamat, $agama, $pekerjaan;
 
     protected $rules = [
-        'email' => 'required|email',
+        'nama_pemohon' => 'required',
         'no_hp' => 'required|min:9|max:13',
         'no_surat_permohonan' => 'required',
         'tgl_surat_permohonan' => 'required|date',
@@ -50,8 +50,7 @@ class Create extends Component
     ];
 
     protected $messages = [
-        'email.required' => ':attribute tidak boleh kosong!',
-        'email.email' => ':attribute tidak valid!',
+        'nama_pemohon.required' => ':attribute tidak boleh kosong!',        
         'no_hp.required' => ':attribute tidak boleh kosong!',
         'no_hp.min' => ':attribute tidak valid!',
         'no_hp.max' => ':attribute tidak valid!',
@@ -121,7 +120,7 @@ class Create extends Component
     public function submit()
     {        
         //Validasi Inputan User             
-        $request = $this->validate();            
+        $request = $this->validate();                    
         //Simpan Berkas-Berkas
         if (isset($request['berkas_surat_permohonan'])) {
             $request['berkas_surat_permohonan']->store('berkas');
@@ -167,10 +166,10 @@ class Create extends Component
 
         $user = User::find($user_id);
         $request['user_id'] = $user_id;
-        $request['asal_instansi'] = $user->getRoleNames()->first();                
+        $request['asal_instansi'] = $user->getRoleNames()->first();                        
 
-        DB::transaction(function() use ($request) {            
-            $store_request = Request::create($request);
+        DB::transaction(function() use ($request) {                
+            $store_request = Request::create($request);            
             
             foreach($request['barang_bukti'] as $bukti)
             {

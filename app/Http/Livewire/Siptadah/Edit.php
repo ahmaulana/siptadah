@@ -22,11 +22,11 @@ class Edit extends Component
 
     public $file_surat_permohonan, $file_laporan_polisi, $file_sp_pp, $file_berita_acara, $file_surat_penerimaan, $file_sp_penyidikan, $file_spdp, $file_resume;
 
-    public $user_id, $asal_instansi, $email, $no_hp, $no_surat_permohonan, $tgl_surat_permohonan, $jenis_permohonan, $penyitaan_penggeledahan, $tgl_sita_geledah, $berkas_surat_permohonan, $berkas_laporan_polisi, $berkas_sp_pp, $berkas_berita_acara, $berkas_surat_penerimaan, $berkas_sp_penyidikan, $berkas_spdp, $berkas_resume, $pasal, $sumber, $nama_tersangka, $tempat_lahir, $tgl_lahir, $jenis_kelamin, $kebangsaan, $alamat, $agama, $pekerjaan;
+    public $user_id, $asal_instansi, $nama_pemohon, $no_hp, $no_surat_permohonan, $tgl_surat_permohonan, $jenis_permohonan, $penyitaan_penggeledahan, $tgl_sita_geledah, $berkas_surat_permohonan, $berkas_laporan_polisi, $berkas_sp_pp, $berkas_berita_acara, $berkas_surat_penerimaan, $berkas_sp_penyidikan, $berkas_spdp, $berkas_resume, $pasal, $sumber, $nama_tersangka, $tempat_lahir, $tgl_lahir, $jenis_kelamin, $kebangsaan, $alamat, $agama, $pekerjaan;
 
     protected $rules = [
         'asal_instansi' => 'required',
-        'email' => 'required|email',
+        'nama_pemohon' => 'required',
         'no_hp' => 'required|min:9|max:13',
         'no_surat_permohonan' => 'required',
         'tgl_surat_permohonan' => 'required|date',
@@ -56,8 +56,7 @@ class Edit extends Component
 
     protected $messages = [
         'asal_instansi.required' => ':attribute tidak boleh kosong!',
-        'email.required' => ':attribute tidak boleh kosong!',
-        'email.email' => ':attribute tidak valid!',
+        'nama_pemohon.required' => ':attribute tidak boleh kosong!',        
         'no_hp.required' => ':attribute tidak boleh kosong!',
         'no_hp.min' => ':attribute tidak valid!',
         'no_hp.max' => ':attribute tidak valid!',
@@ -107,7 +106,7 @@ class Edit extends Component
     {        
         $this->user_id = $this->request->user_id;
         $this->asal_instansi = $this->request->asal_instansi;
-        $this->email = $this->request->email;
+        $this->nama_pemohon = $this->request->nama_pemohon;
         $this->no_hp = $this->request->no_hp;
         $this->no_surat_permohonan = $this->request->no_surat_permohonan;
         $this->tgl_surat_permohonan = date('Y-m-d', strtotime($this->request->tgl_surat_permohonan));
@@ -180,7 +179,7 @@ class Edit extends Component
         $request = $this->validate();
         DB::transaction(function () use ($request) {
             $update = Request::findOrFail($this->request->id);
-            $update->email = $request['email'];
+            $update->nama_pemohon = $request['nama_pemohon'];
             $update->no_hp = $request['no_hp'];
             $update->no_surat_permohonan = $request['no_surat_permohonan'];
             $update->tgl_surat_permohonan = $request['tgl_surat_permohonan'];

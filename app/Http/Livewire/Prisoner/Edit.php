@@ -16,12 +16,12 @@ class Edit extends Component
 
     public $file_surat_permohonan, $file_laporan_polisi, $file_berita_acara, $file_penetapan_penahanan_penyidik, $file_penetapan_perpanjangan_penahanan, $file_sp_penyidikan, $file_spdp, $file_resume;
 
-    public $email, $no_hp, $no_surat, $tgl_surat, $nama_tersangka, $tempat_lahir, $tgl_lahir, $jenis_kelamin, $alamat, $agama, $pekerjaan, $berkas_surat_permohonan, $berkas_laporan_polisi, $berkas_sp_penyidikan, $berkas_spdp, $berkas_penetapan_penahanan_penyidik, $berkas_penetapan_perpanjangan_penahanan, $berkas_berita_acara, $berkas_resume;
+    public $nama_pemohon, $no_hp, $no_surat, $tgl_surat, $nama_tersangka, $tempat_lahir, $tgl_lahir, $jenis_kelamin, $alamat, $agama, $pekerjaan, $berkas_surat_permohonan, $berkas_laporan_polisi, $berkas_sp_penyidikan, $berkas_spdp, $berkas_penetapan_penahanan_penyidik, $berkas_penetapan_perpanjangan_penahanan, $berkas_berita_acara, $berkas_resume;
 
     use WithFileUploads;
 
     protected $rules = [
-        'email' => 'required|email',
+        'nama_pemohon' => 'required',
         'no_hp' => 'required|min:9|max:13',
         'no_surat' => 'required',
         'tgl_surat' => 'required|date',
@@ -43,8 +43,7 @@ class Edit extends Component
     ];
 
     protected $messages = [
-        'email.required' => ':attribute tidak boleh kosong!',
-        'email.email' => ':attribute tidak valid!',
+        'nama_pemohon.required' => ':attribute tidak boleh kosong!',        
         'no_hp.required' => ':attribute tidak boleh kosong!',
         'no_hp.min' => ':attribute tidak valid!',
         'no_hp.max' => ':attribute tidak valid!',
@@ -89,7 +88,7 @@ class Edit extends Component
     public function mount()
     {
         $this->user_id = $this->request->user_id;
-        $this->email = $this->request->email;
+        $this->nama_pemohon = $this->request->nama_pemohon;
         $this->no_hp = $this->request->no_hp;
         $this->asal_instansi = $this->request->asal_instansi;        
         $this->no_surat = $this->request->no_surat;
@@ -135,7 +134,7 @@ class Edit extends Component
         $request = $this->validate();
         DB::transaction(function () use ($request) {
             $update = Prisoner::findOrFail($this->request->id);            
-            $update->email = $request['email'];
+            $update->nama_pemohon = $request['nama_pemohon'];
             $update->no_hp = $request['no_hp'];
             $update->no_surat = $request['no_surat'];
             $update->tgl_surat = $request['tgl_surat'];                        
