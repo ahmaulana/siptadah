@@ -141,6 +141,9 @@ class Index extends LivewireDatatable
             'tgl_sekarang' => Carbon::now()->isoFormat('D MMMM Y'),
         ]);
 
+        #Remove Special Character
+        $request->no_surat = str_replace(["/", "\\"], ".", $request->no_surat);
+
         $file_name = 'Perpanjangan Tahanan ' . ucfirst($request->jenis_permohonan) . ' ' . $request->no_surat . '.docx';
         $surat->saveAs($file_name);
         return response()->download(public_path($file_name))->deleteFileAfterSend();

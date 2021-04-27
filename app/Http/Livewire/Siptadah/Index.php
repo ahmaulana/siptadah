@@ -140,6 +140,9 @@ class Index extends LivewireDatatable
             $no++;
         }
 
+        #Remove Special Character
+        $request->no_surat_permohonan = str_replace(["/", "\\"], ".", $request->no_surat_permohonan);
+
         $file_name = 'Surat ' . ucfirst($request->jenis_permohonan) . ' ' . $request->no_surat_permohonan . '.docx';
         $surat->saveAs($file_name);
         return response()->download(public_path($file_name))->deleteFileAfterSend();
